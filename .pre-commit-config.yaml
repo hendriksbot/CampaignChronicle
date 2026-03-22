@@ -1,0 +1,35 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-added-large-files
+      - id: check-toml
+
+  - repo: https://github.com/psf/black
+    rev: 25.9.0
+    hooks:
+      - id: black
+        language_version: python3.14
+        args: ["--config=pyproject.toml"]
+
+  - repo: https://github.com/pycqa/pylint
+    rev: v4.0.2
+    hooks:
+      - id: pylint
+        args:
+          [
+            "--rcfile=.pylintrc",
+            "--ignore-paths=^tests/.*$",
+          ]
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        name: prettier-frontend
+        files: "^(src/app/flask/templates|src/app/flask/static/js|src/app/flask/static/css)/.*\\.(js|css|html)$"
+        args: ["--config=.prettierrc"]
