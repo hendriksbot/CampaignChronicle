@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Campaign Chronicle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>Campaign Chronicle</h1>
+      <p class="subtitle">Dein Kampagnen-Gedächtnis</p>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <h2>👥 Personen</h2>
+        <p>Verwalte NPCs und wichtige Charaktere.</p>
+
+        <div class="actions">
+          <a href="/people" class="btn primary">Anzeigen</a>
+          <a href="/people/new" class="btn">Neu anlegen</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>🎭 Sessionideen</h2>
+        <p>Plane Szenen und verbinde sie mit Charakteren.</p>
+
+        <div class="actions">
+          <a href="/ideas" class="btn primary">Anzeigen</a>
+          <a href="/ideas/new" class="btn">Neue Idee</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>v{{ app_version }}</p>
+    </footer>
+  </body>
+</html>

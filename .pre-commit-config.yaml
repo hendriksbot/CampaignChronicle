@@ -31,5 +31,5 @@ repos:
     hooks:
       - id: prettier
         name: prettier-frontend
-        files: "^(src/app/flask/templates|src/app/flask/static/js|src/app/flask/static/css)/.*\\.(js|css|html)$"
+        files: "^(src/app/templates|src/app/static/js|src/app/static/css)/.*\\.(js|css|html)$"
         args: ["--config=.prettierrc"]
