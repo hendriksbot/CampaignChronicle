@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Debug App",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "src/app/main.py",
+            "console": "integratedTerminal",
+            "args": ["--debug"]
+        }
+    ]
+}
