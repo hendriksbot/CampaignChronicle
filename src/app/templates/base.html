@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Campaign Chronicle{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="/" class="nav-logo">Campaign Chronicle</a>
+        <a href="/" class="nav-link">Home</a>
+        <a href="/people" class="nav-link">Personen</a>
+      </div>
+
+      <div class="nav-right">
+        <a href="/settings" class="nav-link">⚙️</a>
+      </div>
+    </nav>
+
+    <main class="container">{% block content %}{% endblock %}</main>
+    <footer class="footer">
+      <p>v{{ app_version }}</p>
+    </footer>
+  </body>
+</html>
