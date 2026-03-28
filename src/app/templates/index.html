@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
-<div class="banner warning">
+<div class="banner warning" id="warning-no-campaign">
   <div class="banner-content">
     <span>⚠ Kein Kampagnenordner gesetzt</span>
 
@@ -9,7 +9,7 @@
   </div>
 </div>
 
-<section class="card">
+<section class="card requires-campaign disabled">
   <h2>👥 Personen</h2>
   <p>Was ist bekannt über die Charaktere?</p>
 
@@ -26,6 +26,22 @@
 
     socket.emit("request_set_campaign_folder");
   }
+
+  socket.on("campaign_set_status", function (data) {
+    document.querySelectorAll(".nav-requires-campaign").forEach((el) => {
+      el.classList.toggle("nav-disabled", !data.is_active);
+    });
+
+    document.querySelectorAll(".requires-campaign").forEach((el) => {
+      el.classList.toggle("disabled", !data.is_active);
+    });
+    const warning = document.getElementById("warning-no-campaign");
+    if (data.is_active) {
+      warning.style.display = "none";
+    } else {
+      warning.style.display = "block";
+    }
+  });
 </script>
 
 {% endblock %}

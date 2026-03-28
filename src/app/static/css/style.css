@@ -138,6 +138,11 @@ body {
   color: #fff;
 }
 
+.nav-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* Banner */
 .banner {
   margin-bottom: 1.5rem;
@@ -157,4 +162,10 @@ body {
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }
