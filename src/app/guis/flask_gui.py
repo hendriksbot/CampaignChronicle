@@ -35,8 +35,8 @@ class FlaskGui(gui.Gui):
             use_reloader=is_debug_mode,
         )
 
-    def emit_object(self, event, data):
-        pass
+    def emit_dict(self, event: str, data: dict):
+        self._socketio.emit(event, data)
 
     def _setup_routes(self):
         @self._app.route("/")
@@ -44,3 +44,7 @@ class FlaskGui(gui.Gui):
             return flask.render_template(
                 "index.html", app_version=_version.version
             )
+
+        @self._socketio.on("request_set_campaign_folder")
+        def request_set_campaign_folder():
+            self._evh.request_set_campaign_folder()

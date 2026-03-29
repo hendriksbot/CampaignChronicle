@@ -18,5 +18,5 @@ class Gui(ABC):
         """abstract run"""
 
     @abstractmethod
-    def emit_object(self, event: str, data: object):
-        """abstract emit object"""
+    def emit_dict(self, event: str, data: dict):
+        """abstract emit dict"""
