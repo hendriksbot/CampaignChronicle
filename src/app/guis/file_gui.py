@@ -22,6 +22,6 @@ class DirectorySelectorGui:
         folder = filedialog.askdirectory(title=title)
         if not folder:
             raise CancelledRequest()
-        dir_path = pathlib.Path()
+        dir_path = pathlib.Path(folder)
         root.destroy()
         return dir_path
