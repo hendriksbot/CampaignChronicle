@@ -45,6 +45,12 @@ class FlaskGui(gui.Gui):
                 "index.html", app_version=_version.version
             )
 
+        @self._app.route("/people")
+        def render_people_page():
+            return flask.render_template(
+                "people.html", app_version=_version.version
+            )
+
         @self._socketio.on("request_set_campaign_folder")
         def request_set_campaign_folder():
             self._evh.request_set_campaign_folder()
@@ -52,3 +58,18 @@ class FlaskGui(gui.Gui):
         @self._socketio.on("request_reload_index")
         def request_reload_index():
             self._evh.request_reload_index()
+
+        @self._socketio.on("request_people_list")
+        def request_people_list():
+            self.emit_dict(
+                "updated_people_list",
+                {
+                    "people": [
+                        {"name": "Sarazar"},
+                        {"name": "Naivara"},
+                        {"name": "Hammerfaust"},
+                        {"name": "Himo"},
+                    ],
+                    "test": "test",
+                },
+            )
