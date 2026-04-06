@@ -19,6 +19,13 @@ class Controller(evh_if.EventHandlerInterface):
     def start_app(self, is_debug_mode: bool = False):
         self._gui.run(is_debug_mode)
 
+    def set_campaign_path(self, campaign_path: pathlib.Path):
+        self._campaign_path = campaign_path
+
+    def request_reload_index(self):
+        is_active = bool(self._campaign_path)
+        self._gui.emit_dict("campaign_set_status", {"is_active": is_active})
+
     def request_set_campaign_folder(self):
 
         try:

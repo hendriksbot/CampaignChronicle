@@ -48,3 +48,7 @@ class FlaskGui(gui.Gui):
         @self._socketio.on("request_set_campaign_folder")
         def request_set_campaign_folder():
             self._evh.request_set_campaign_folder()
+
+        @self._socketio.on("request_reload_index")
+        def request_reload_index():
+            self._evh.request_reload_index()

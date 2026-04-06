@@ -27,6 +27,10 @@
     socket.emit("request_set_campaign_folder");
   }
 
+  document.addEventListener("DOMContentLoaded", () => {
+    socket.emit("request_reload_index");
+  });
+
   socket.on("campaign_set_status", function (data) {
     document.querySelectorAll(".nav-requires-campaign").forEach((el) => {
       el.classList.toggle("nav-disabled", !data.is_active);
