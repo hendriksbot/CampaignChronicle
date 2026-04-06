@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>{% block title %}Campaign Chronicle{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    {% block head_style %}{% endblock %}
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   </head>
 
