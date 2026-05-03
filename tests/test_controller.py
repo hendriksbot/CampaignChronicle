@@ -1,17 +1,19 @@
 """this module tests the controller of the app"""
 
 import unittest as ut
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, MagicMock, patch
 import pathlib
 import app.controller as ctr
 import app.guis.file_gui as file_gui
+import app.domain.people as ppl
 
 
 class TestCampaignSetup(ut.TestCase):
 
     def setUp(self):
         self.mock_gui = Mock()
-        self.controller = ctr.Controller(self.mock_gui)
+        self.mock_interactor = Mock()
+        self.controller = ctr.Controller(self.mock_gui, self.mock_interactor)
 
 
 class TestSetCampaignFolder(TestCampaignSetup):
@@ -49,9 +51,33 @@ class TestIndexReload(TestCampaignSetup):
         )
 
     def test_reload_index_with_campaign_path(self):
-        self.controller.set_campaign_path(pathlib.Path("path/to/dir/"))
+        self.controller.register_campaign(pathlib.Path("path/to/dir/"))
         self.controller.request_reload_index()
 
         self.mock_gui.emit_dict.assert_called_once_with(
             "campaign_set_status", {"is_active": True}
+        )
+
+
+class TestShowPeople(TestCampaignSetup):
+    """tests to show people"""
+
+    def test_no_people(self):
+        self.controller.register_campaign(pathlib.Path("path/to/dir/"))
+        self.controller.request_people_list()
+        self.mock_gui.emit_dict.assert_called_once_with(
+            "updated_people_list", {"people": []}
+        )
+
+    def test_one_person(self):
+        people_path = MagicMock()
+        people_path.exists.return_value = True
+        people_path.is_dir.return_value = True
+        campaign_path = MagicMock()
+        campaign_path.__truediv__.return_value = people_path
+        self.controller.register_campaign(campaign_path)
+        self.mock_interactor.get_people.return_value = [ppl.Person("Bobby")]
+        self.controller.request_people_list()
+        self.mock_gui.emit_dict.assert_called_once_with(
+            "updated_people_list", {"people": [{"name": "Bobby"}]}
         )

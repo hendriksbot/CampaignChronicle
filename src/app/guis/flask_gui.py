@@ -61,15 +61,4 @@ class FlaskGui(gui.Gui):
 
         @self._socketio.on("request_people_list")
         def request_people_list():
-            self.emit_dict(
-                "updated_people_list",
-                {
-                    "people": [
-                        {"name": "Sarazar"},
-                        {"name": "Naivara"},
-                        {"name": "Hammerfaust"},
-                        {"name": "Himo"},
-                    ],
-                    "test": "test",
-                },
-            )
+            self._evh.request_people_list()

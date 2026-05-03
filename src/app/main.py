@@ -6,6 +6,7 @@ from threading import Timer
 import app.utils.paths as paths
 import app.guis.flask_gui as flask_gui
 import app.controller as ctr
+import app.interactor as iactr
 
 app = typer.Typer()
 
@@ -41,7 +42,7 @@ def main(
     locator = make_locator()
     gui_config = {"flask_secret_key": "to_be_replaced", "port": 5000}
     gui = flask_gui.FlaskGui(config=gui_config, locator=locator)
-    controller = ctr.Controller(gui=gui)
+    controller = ctr.Controller(gui=gui, interactor=iactr.Interactor())
     gui.bind_event_handler(controller)
 
     Timer(1, lambda: open_browser(port=gui_config["port"])).start()

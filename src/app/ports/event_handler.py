@@ -13,3 +13,7 @@ class EventHandlerInterface(ABC):
     @abstractmethod
     def request_set_campaign_folder(self):
         pass
+
+    @abstractmethod
+    def request_people_list(self):
+        pass
