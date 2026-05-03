@@ -17,7 +17,7 @@ class Interactor:
 
     def register_people(self):
         people_path = self._campaign_dir / "people"
-        files = list(people_path.glob("*.md"))
+        files = sorted(people_path.glob("*.md"), key=lambda f: f.stem)
         for file in files:
             content = file.read_text(encoding="utf-8")
             lines = content.splitlines()
