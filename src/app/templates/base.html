@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Campaign Chronicle{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    {% block head_style %}{% endblock %}
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="/" class="nav-logo">Campaign Chronicle</a>
+        <a href="/" class="nav-link" id="nav-home">Home</a>
+        <a href="/people" class="nav-link nav-requires-campaign" id="nav-people">Personen</a>
+      </div>
+
+      <div class="nav-right">
+        <a href="/settings" class="nav-link nav-disabled">⚙️</a>
+      </div>
+    </nav>
+
+    <main class="container">{% block content %}{% endblock %}</main>
+    <footer class="footer">
+      <p>v{{ app_version }}</p>
+    </footer>
+  </body>
+</html>

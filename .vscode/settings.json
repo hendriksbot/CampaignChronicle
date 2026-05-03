@@ -1,0 +1,13 @@
+{
+    "editor.renderWhitespace": "trailing",
+    "editor.rulers": [80],
+    "html.validate.scripts": false,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.unittestEnabled": true
+}
