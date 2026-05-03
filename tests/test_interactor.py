@@ -35,8 +35,8 @@ class TestGetPeople(ut.TestCase):
             people_dir = campaign_path / "people"
             people_dir.mkdir()
 
-            (people_dir / "Alice.md").write_text("# Alice")
-            (people_dir / "Bob.md").write_text("# Bob")
+            (people_dir / "alice.md").write_text("# Alice")
+            (people_dir / "bob.md").write_text("# Bob")
 
             self.interactor = iactr.Interactor()
             self.interactor.set_campaign_path(campaign_path)

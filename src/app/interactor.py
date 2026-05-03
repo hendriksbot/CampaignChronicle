@@ -18,7 +18,15 @@ class Interactor:
     def register_people(self):
         people_path = self._campaign_dir / "people"
         files = list(people_path.glob("*.md"))
-        self._people = [ppl.Person(name=file.stem) for file in files]
+        for file in files:
+            content = file.read_text(encoding="utf-8")
+            lines = content.splitlines()
+            name = (
+                lines[0][2:]
+                if lines and lines[0].startswith("# ")
+                else file.stem
+            )
+            self._people.append(ppl.Person(name=name))
 
     def get_people(self) -> list[ppl.Person]:
         return self._people
