@@ -74,13 +74,15 @@ body {
   border-radius: 6px;
   text-decoration: none;
   color: #f4f4f4;
-  border: 1px solid #555;
+  background-color: transparent;
+  border: 1px solid #444;
   transition: background 0.2s ease;
   cursor: pointer;
 }
 
 .btn:hover {
-  background-color: #3a3a50;
+  background-color: #2c2c3e;
+  border-color: #5c7cfa;
 }
 
 .btn.primary {
