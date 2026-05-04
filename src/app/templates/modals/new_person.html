@@ -1,0 +1,43 @@
+<div id="person-modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Neue Person</h2>
+      <button class="modal-close" onclick="closeModal('person-modal')">×</button>
+    </div>
+
+    <div class="modal-body">
+      <label>Name</label>
+      <input type="text" id="person-name" placeholder="z. B. Gandalf der Graue" />
+
+      <!-- future markdown -->
+      <div id="markdown-section" class="hidden">
+        <div class="editor-tabs">
+          <button
+            class="tab active"
+            data-tab="edit"
+            onclick="switchTab('edit','person-md-raw','person-md-preview')"
+          >
+            Bearbeiten
+          </button>
+          <button
+            class="tab"
+            data-tab="preview"
+            onclick="switchTab('preview','person-md-raw','person-md-preview')"
+          >
+            Vorschau
+          </button>
+        </div>
+
+        <div class="editor-container">
+          <textarea id="person-md-raw" class="editor-pane"></textarea>
+          <div id="person-md-preview" class="editor-pane hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('person-modal')">Abbrechen</button>
+      <button class="btn primary" onclick="createPerson()">Speichern</button>
+    </div>
+  </div>
+</div>

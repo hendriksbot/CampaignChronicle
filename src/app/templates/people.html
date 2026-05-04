@@ -1,13 +1,18 @@
 {% extends "base.html" %} {% block title %}People{% endblock %} {% block head_style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/people.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
 {% endblock %} {% block content %}
 <div class="page-header">
   <h1>👥 Personen</h1>
-  <button href="/people/new" class="btn primary disabled">+ Neue Person</button>
+  <button class="btn primary" onclick="openModal('person-modal')">+ Neue Person</button>
 </div>
 
 <div class="people-grid" id="people-container"></div>
 
+{% include "modals/new_person.html" %}
+
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/markdown_tab.js') }}"></script>
 <script>
   const socket = io();
   document.addEventListener("DOMContentLoaded", () => {

@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}Home{% endblock %}{% block head_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
+{% endblock %} {% block content %}
 <div class="banner warning" id="warning-no-campaign">
   <div class="banner-content">
     <span>⚠ Kein Kampagnenordner gesetzt</span>
@@ -15,9 +17,14 @@
 
   <div class="actions">
     <a href="/people" class="btn primary">Anzeigen</a>
-    <a href="/people/new" class="btn disabled">Neu anlegen</a>
+    <a class="btn" onclick="openModal('person-modal')">Neu anlegen</a>
   </div>
 </section>
+
+{% include "modals/new_person.html" %}
+
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/markdown_tab.js') }}"></script>
 
 <script>
   const socket = io();
