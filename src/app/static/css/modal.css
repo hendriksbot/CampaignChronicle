@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: #00000099;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,6 +45,21 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.modal-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.modal-form-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #f4f4f4;
 }
 
 .modal-body input,
@@ -121,4 +136,31 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+.modal-input-wrapper {
+  position: relative;
+}
+
+.modal-input-error-message {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 4px;
+
+  background: var(--error);
+  color: #f4f4f4;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: 0.15s ease;
+}
+
+.modal-input-wrapper.error .modal-input-error-message {
+  opacity: 1;
+  transform: translateY(0);
 }

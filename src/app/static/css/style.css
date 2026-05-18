@@ -1,3 +1,7 @@
+:root {
+  --error: #aa5555;
+}
+
 /* Reset */
 * {
   margin: 0;
@@ -102,6 +106,12 @@ body {
   color: #888;
 }
 
+input.error {
+  border-color: var(--error);
+  outline: none;
+  box-shadow: 0 0 0 2px #ff4d4f33;
+}
+
 /* Navbar */
 .navbar {
   display: flex;
@@ -165,7 +175,7 @@ body {
 
 .banner.warning {
   background-color: #3a2a2a;
-  border: 1px solid #aa5555;
+  border: 1px solid var(--error);
   color: #ffb3b3;
   display: none;
 }

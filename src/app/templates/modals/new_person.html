@@ -2,12 +2,17 @@
   <div class="modal-content">
     <div class="modal-header">
       <h2>Neue Person</h2>
-      <button class="modal-close" onclick="closeModal('person-modal')">×</button>
+      <button class="modal-close">×</button>
     </div>
 
     <div class="modal-body">
-      <label>Name</label>
-      <input type="text" id="person-name" placeholder="z. B. Gandalf der Graue" />
+      <div class="modal-form-group">
+        <label for="person-name">Name</label>
+        <div class="modal-input-wrapper">
+          <input type="text" id="person-name" placeholder="z. B. Gandalf der Graue" />
+          <div class="modal-input-error-message" id="person-name-error"></div>
+        </div>
+      </div>
 
       <!-- future markdown -->
       <div id="markdown-section" class="hidden">
@@ -36,8 +41,8 @@
     </div>
 
     <div class="modal-actions">
-      <button class="btn" onclick="closeModal('person-modal')">Abbrechen</button>
-      <button class="btn primary" onclick="createPerson()">Speichern</button>
+      <button class="btn cancel-btn">Abbrechen</button>
+      <button class="btn primary save-btn">Speichern</button>
     </div>
   </div>
 </div>

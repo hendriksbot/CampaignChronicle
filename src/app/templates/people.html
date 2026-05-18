@@ -4,45 +4,12 @@
 {% endblock %} {% block content %}
 <div class="page-header">
   <h1>👥 Personen</h1>
-  <button class="btn primary" onclick="openModal('person-modal')">+ Neue Person</button>
+  <button class="btn primary" id="new-person-btn">+ Neue Person</button>
 </div>
 
 <div class="people-grid" id="people-container"></div>
 
 {% include "modals/new_person.html" %}
-
-<script src="{{ url_for('static', filename='js/modals/modal.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/pages/people.js') }}"></script>
 <script src="{{ url_for('static', filename='js/markdown_tab.js') }}"></script>
-<script>
-  const socket = io();
-  document.addEventListener("DOMContentLoaded", () => {
-    socket.emit("request_people_list");
-  });
-
-  socket.on("updated_people_list", function (data) {
-    renderPeople(data);
-  });
-
-  function renderPeople(data) {
-    const grid = document.getElementById("people-container");
-    grid.innerHTML = "";
-    data.people.forEach((person) => {
-      const card = createPersonCard(person);
-      grid.appendChild(card);
-    });
-  }
-
-  function createPersonCard(person) {
-    const card = document.createElement("a");
-    card.className = "person-card disabled";
-    card.href = "/people";
-
-    const name = document.createElement("h3");
-    name.textContent = person.name;
-
-    card.appendChild(name);
-
-    return card;
-  }
-</script>
 {% endblock %}
