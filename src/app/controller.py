@@ -1,7 +1,6 @@
 """this module contains the controller logic of the app"""
 
 import pathlib
-from slugify import slugify
 import app.ports.event_handler as evh_if
 import app.guis.gui
 import app.guis.file_gui as file_gui
@@ -53,8 +52,7 @@ class Controller(evh_if.EventHandlerInterface):
 
     def request_create_person(self, data: dict):
         person = self._interactor.add_person(data["name"])
-        slug = slugify(person.name)
-        file_name = slug + ".md"
+        file_name = person.id + ".md"
         file_path = self._campaign_path.people() / file_name
         file_path.write_text(f"# {person.name}\n", encoding="utf-8")
 

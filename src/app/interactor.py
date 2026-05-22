@@ -1,5 +1,6 @@
 """this module maintains the core business logic"""
 
+from slugify import slugify
 import app.domain.people as ppl
 import app.database as db
 
@@ -19,10 +20,10 @@ class Interactor:
                 if lines and lines[0].startswith("# ")
                 else file.stem
             )
-            self._people.append(ppl.Person(name=name))
+            self._people.append(ppl.Person(name=name, id=slugify(name)))
 
     def add_person(self, name: str) -> ppl.Person:
-        person = ppl.Person(name=name)
+        person = ppl.Person(name=name, id=slugify(name))
         self._people.append(person)
         return person
 

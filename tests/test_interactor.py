@@ -25,7 +25,8 @@ class TestGetPeople(ut.TestCase):
         people_list = self.interactor.get_people()
 
         self.assertListEqual(
-            [ppl.Person("Alice"), ppl.Person("Bob")], people_list
+            [ppl.Person("Alice", "alice"), ppl.Person("Bob", "bob")],
+            people_list,
         )
 
     def test_re_register_people(self):
@@ -47,5 +48,6 @@ class TestGetPeople(ut.TestCase):
         people_list = self.interactor.get_people()
 
         self.assertListEqual(
-            [ppl.Person("Carla"), ppl.Person("Dave")], people_list
+            [ppl.Person("Carla", "carla"), ppl.Person("Dave", "dave")],
+            people_list,
         )

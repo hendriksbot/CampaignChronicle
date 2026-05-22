@@ -70,7 +70,9 @@ class TestShowPeople(TestCampaignSetup):
         )
 
     def test_one_person(self):
-        self.mock_interactor.get_people.return_value = [ppl.Person("Bobby")]
+        self.mock_interactor.get_people.return_value = [
+            ppl.Person("Bobby", "bobby")
+        ]
         self.controller.request_people_list()
         self.mock_gui.emit_dict.assert_called_once_with(
             "updated_people_list", {"people": [{"name": "Bobby"}]}
@@ -91,8 +93,12 @@ class TestCreateNewPerson(TestCampaignSetup):
         campaign_path = MagicMock()
         campaign_path.__truediv__.return_value = people_path
         self.controller.register_campaign(campaign_path)
-        self.mock_interactor.add_person.return_value = ppl.Person("Salazar")
-        self.mock_interactor.get_people.return_value = [ppl.Person("Salazar")]
+        self.mock_interactor.add_person.return_value = ppl.Person(
+            "Salazar", "salazar"
+        )
+        self.mock_interactor.get_people.return_value = [
+            ppl.Person("Salazar", "salazar")
+        ]
         self.controller.request_create_person(data)
 
         file_path.write_text.assert_called_once_with(
