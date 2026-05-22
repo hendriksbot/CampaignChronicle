@@ -1,50 +1,51 @@
 """this module tests the interactor module"""
 
 import unittest as ut
-from unittest.mock import Mock, patch
 import tempfile
-import pathlib as pl
+import pathlib
 import app.interactor as iactr
 import app.domain.people as ppl
+import app.database as db
 
 
 class TestGetPeople(ut.TestCase):
 
     def test_set_path(self):
         self.interactor = iactr.Interactor()
-        self.interactor.set_campaign_path(pl.Path("path/to/dir"))
-
-    def test_register_people_no_people(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            campaign_path = pl.Path(tmp)
-            people_dir = campaign_path / "people"
-            people_dir.mkdir()
-
-            self.interactor = iactr.Interactor()
-            self.interactor.set_campaign_path(campaign_path)
-
-            self.interactor.register_people()
-
-            people_list = self.interactor.get_people()
-
-            self.assertListEqual([], people_list)
 
     def test_register_people_two_persons(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            campaign_path = pl.Path(tmp)
-            people_dir = campaign_path / "people"
-            people_dir.mkdir()
+        db_people_list = [
+            db.MarkdownFile(
+                "alice", pathlib.Path("path/to/alice.md"), "# Alice"
+            ),
+            db.MarkdownFile("bob", pathlib.Path("path/to/bob.md"), "# Bob"),
+        ]
+        self.interactor = iactr.Interactor()
+        self.interactor.register_people(db_people_list)
+        people_list = self.interactor.get_people()
 
-            (people_dir / "alice.md").write_text("# Alice")
-            (people_dir / "bob.md").write_text("# Bob")
+        self.assertListEqual(
+            [ppl.Person("Alice"), ppl.Person("Bob")], people_list
+        )
 
-            self.interactor = iactr.Interactor()
-            self.interactor.set_campaign_path(campaign_path)
+    def test_re_register_people(self):
+        db_people_list_a = [
+            db.MarkdownFile(
+                "alice", pathlib.Path("path/to/alice.md"), "# Alice"
+            ),
+            db.MarkdownFile("bob", pathlib.Path("path/to/bob.md"), "# Bob"),
+        ]
+        db_people_list_b = [
+            db.MarkdownFile(
+                "carla", pathlib.Path("path/to/carla.md"), "# Carla"
+            ),
+            db.MarkdownFile("dave", pathlib.Path("path/to/dave.md"), "# Dave"),
+        ]
+        self.interactor = iactr.Interactor()
+        self.interactor.register_people(db_people_list_a)
+        self.interactor.register_people(db_people_list_b)
+        people_list = self.interactor.get_people()
 
-            self.interactor.register_people()
-
-            people_list = self.interactor.get_people()
-
-            self.assertListEqual(
-                [ppl.Person("Alice"), ppl.Person("Bob")], people_list
-            )
+        self.assertListEqual(
+            [ppl.Person("Carla"), ppl.Person("Dave")], people_list
+        )

@@ -63,21 +63,41 @@ class TestShowPeople(TestCampaignSetup):
     """tests to show people"""
 
     def test_no_people(self):
-        self.controller.register_campaign(pathlib.Path("path/to/dir/"))
+        self.mock_interactor.get_people.return_value = []
         self.controller.request_people_list()
         self.mock_gui.emit_dict.assert_called_once_with(
             "updated_people_list", {"people": []}
         )
 
     def test_one_person(self):
-        people_path = MagicMock()
-        people_path.exists.return_value = True
-        people_path.is_dir.return_value = True
-        campaign_path = MagicMock()
-        campaign_path.__truediv__.return_value = people_path
-        self.controller.register_campaign(campaign_path)
         self.mock_interactor.get_people.return_value = [ppl.Person("Bobby")]
         self.controller.request_people_list()
         self.mock_gui.emit_dict.assert_called_once_with(
             "updated_people_list", {"people": [{"name": "Bobby"}]}
+        )
+
+
+class TestCreateNewPerson(TestCampaignSetup):
+    """tests for creating new person"""
+
+    def test_new_person(self):
+        data = {
+            "name": "Salazar",
+            "markdown": "",
+        }
+        file_path = MagicMock()
+        people_path = MagicMock()
+        people_path.__truediv__.return_value = file_path
+        campaign_path = MagicMock()
+        campaign_path.__truediv__.return_value = people_path
+        self.controller.register_campaign(campaign_path)
+        self.mock_interactor.add_person.return_value = ppl.Person("Salazar")
+        self.mock_interactor.get_people.return_value = [ppl.Person("Salazar")]
+        self.controller.request_create_person(data)
+
+        file_path.write_text.assert_called_once_with(
+            "# Salazar\n", encoding="utf-8"
+        )
+        self.mock_gui.emit_dict.assert_called_once_with(
+            "updated_people_list", {"people": [{"name": "Salazar"}]}
         )

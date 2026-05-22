@@ -62,3 +62,7 @@ class FlaskGui(gui.Gui):
         @self._socketio.on("request_people_list")
         def request_people_list():
             self._evh.request_people_list()
+
+        @self._socketio.on("request_create_person")
+        def request_create_person(data):
+            self._evh.request_create_person(data)

@@ -59,6 +59,7 @@ export class NewPersonModal {
     }
     this.socket.emit("request_create_person", {
       name: this.nameInput.value,
+      markdown: "",
     });
     this.close();
   }
