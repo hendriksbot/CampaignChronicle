@@ -1,0 +1,166 @@
+/* Overlay */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #00000099;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+/* Box */
+.modal-content {
+  background: #2c2c3e;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Body */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modal-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.modal-form-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #f4f4f4;
+}
+
+.modal-body input,
+.modal-body textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #1e1e2f;
+  color: #fff;
+}
+
+/* Markdown */
+#person-markdown {
+  height: 150px;
+}
+
+#markdown-preview {
+  height: 150px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  background: #1e1e2f;
+  border: 1px solid #555;
+}
+
+/* Tabs */
+/* Tabs Container */
+.editor-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+/* Tab Buttons */
+.editor-tabs .tab {
+  padding: 0.4rem 0.8rem;
+  background: #1e1e2f;
+  border: 1px solid #444;
+  border-bottom: none;
+  color: #aaa;
+  cursor: pointer;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+/* Active Tab */
+.editor-tabs .tab.active {
+  background: #2c2c3e;
+  color: #fff;
+  border-color: #555;
+}
+
+/* Editor Container */
+.editor-container {
+  border: 1px solid #555;
+  border-radius: 0 6px 6px 6px;
+  background: #2c2c3e;
+}
+
+/* Shared Pane */
+.editor-pane {
+  width: 100%;
+  height: 180px;
+  padding: 0.5rem;
+  background: #1e1e2f;
+  color: #fff;
+  border: none;
+  resize: vertical;
+}
+
+/* Footer */
+.modal-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-input-wrapper {
+  position: relative;
+}
+
+.modal-input-error-message {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 4px;
+
+  background: var(--error);
+  color: #f4f4f4;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: 0.15s ease;
+}
+
+.modal-input-wrapper.error .modal-input-error-message {
+  opacity: 1;
+  transform: translateY(0);
+}

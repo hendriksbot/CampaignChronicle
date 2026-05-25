@@ -6,6 +6,7 @@ import pathlib
 import app.controller as ctr
 import app.guis.file_gui as file_gui
 import app.domain.people as ppl
+import app.database as db
 
 
 class TestCampaignSetup(ut.TestCase):
@@ -63,21 +64,69 @@ class TestShowPeople(TestCampaignSetup):
     """tests to show people"""
 
     def test_no_people(self):
-        self.controller.register_campaign(pathlib.Path("path/to/dir/"))
+        self.mock_interactor.get_people.return_value = []
         self.controller.request_people_list()
         self.mock_gui.emit_dict.assert_called_once_with(
             "updated_people_list", {"people": []}
         )
 
     def test_one_person(self):
-        people_path = MagicMock()
-        people_path.exists.return_value = True
-        people_path.is_dir.return_value = True
-        campaign_path = MagicMock()
-        campaign_path.__truediv__.return_value = people_path
-        self.controller.register_campaign(campaign_path)
-        self.mock_interactor.get_people.return_value = [ppl.Person("Bobby")]
+        self.mock_interactor.get_people.return_value = [
+            ppl.Person("Bobby", "bobby")
+        ]
         self.controller.request_people_list()
         self.mock_gui.emit_dict.assert_called_once_with(
             "updated_people_list", {"people": [{"name": "Bobby"}]}
         )
+
+
+class TestCreateNewPerson(TestCampaignSetup):
+    """tests for creating new person"""
+
+    @patch("app.database.FileDatabase")
+    def test_new_person(self, file_database: MagicMock):
+        data = {
+            "name": "Salazar",
+            "markdown": "",
+        }
+        people_db = MagicMock()
+        file_database.return_value = people_db
+        file_path = MagicMock()
+        people_path = MagicMock()
+        people_path.__truediv__.return_value = file_path
+        campaign_path = MagicMock()
+        campaign_path.__truediv__.return_value = people_path
+        self.controller.register_campaign(campaign_path)
+        self.mock_interactor.add_person.return_value = ppl.Person(
+            "Salazar", "salazar"
+        )
+        self.mock_interactor.get_people.return_value = [
+            ppl.Person("Salazar", "salazar")
+        ]
+        people_db.exist_file.return_value = False
+        self.controller.request_create_person(data)
+        people_db.create_file.assert_called_once_with(
+            db.MarkdownFile("salazar", "# Salazar\n")
+        )
+
+        self.mock_gui.emit_dict.assert_called_once_with(
+            "updated_people_list", {"people": [{"name": "Salazar"}]}
+        )
+
+    @patch("app.database.FileDatabase")
+    def test_new_person_already_exists(self, file_database: MagicMock):
+        data = {
+            "name": "Salazar",
+            "markdown": "",
+        }
+        people_db = MagicMock()
+        file_database.return_value = people_db
+        file_path = MagicMock()
+        people_path = MagicMock()
+        people_path.__truediv__.return_value = file_path
+        campaign_path = MagicMock()
+        campaign_path.__truediv__.return_value = people_path
+        self.controller.register_campaign(campaign_path)
+        self.mock_interactor.add_person.return_value = None
+
+        self.controller.request_create_person(data)

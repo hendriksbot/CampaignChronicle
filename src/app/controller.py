@@ -5,6 +5,8 @@ import app.ports.event_handler as evh_if
 import app.guis.gui
 import app.guis.file_gui as file_gui
 import app.interactor as iactr
+import app.domain.configs as configs
+import app.database as db
 
 
 class Controller(evh_if.EventHandlerInterface):
@@ -13,15 +15,19 @@ class Controller(evh_if.EventHandlerInterface):
     def __init__(self, gui: app.guis.gui.Gui, interactor: iactr.Interactor):
         self._gui = gui
         self._interactor = interactor
-        self._campaign_path: pathlib.Path | None = None
+        self._campaign_path: configs.CampaignPath | None = None
 
     def start_app(self, is_debug_mode: bool = False):
         self._gui.run(is_debug_mode)
 
     def register_campaign(self, campaign_path: pathlib.Path):
-        self._campaign_path = campaign_path
-        self._interactor.set_campaign_path(campaign_path)
-        self._interactor.register_people()
+        self._campaign_path = configs.CampaignPath(campaign_path)
+        self._file_dbs = {
+            "people": db.FileDatabase(self._campaign_path.people())
+        }
+        self._interactor.register_people(
+            self._file_dbs["people"].register_files()
+        )
 
     def request_reload_index(self):
         is_active = bool(self._campaign_path)
@@ -39,10 +45,19 @@ class Controller(evh_if.EventHandlerInterface):
         self._gui.emit_dict("campaign_set_status", {"is_active": True})
 
     def request_people_list(self):
-        people_path = self._campaign_path / "people"
-        people_list = []
-        if people_path.exists() and people_path.is_dir():
-            people = self._interactor.get_people()
-            people_list = [{"name": person.name} for person in people]
-
+        people_list = [
+            {"name": person.name} for person in self._interactor.get_people()
+        ]
         self._gui.emit_dict("updated_people_list", {"people": people_list})
+
+    def request_create_person(self, data: dict):
+        person = self._interactor.add_person(data["name"])
+        if not person:
+            return
+        file = db.MarkdownFile(person.id, content=f"# {person.name}\n")
+        if self._file_dbs["people"].exist_file(file):
+            return
+        else:
+            self._file_dbs["people"].create_file(file)
+
+        self.request_people_list()

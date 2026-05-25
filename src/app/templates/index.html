@@ -1,10 +1,12 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}Home{% endblock %}{% block head_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
+{% endblock %} {% block content %}
 <div class="banner warning" id="warning-no-campaign">
   <div class="banner-content">
     <span>⚠ Kein Kampagnenordner gesetzt</span>
 
     <div class="inline-form">
-      <button onclick="setPath()" class="btn primary">Auswählen</button>
+      <button id="set-path-btn" class="btn primary">Auswählen</button>
     </div>
   </div>
 </div>
@@ -15,37 +17,12 @@
 
   <div class="actions">
     <a href="/people" class="btn primary">Anzeigen</a>
-    <a href="/people/new" class="btn disabled">Neu anlegen</a>
+    <a class="btn" id="new-person-btn">Neu anlegen</a>
   </div>
 </section>
 
-<script>
-  const socket = io();
-  function setPath() {
-    const input = document.getElementById("campaign-path-input");
-
-    socket.emit("request_set_campaign_folder");
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    socket.emit("request_reload_index");
-  });
-
-  socket.on("campaign_set_status", function (data) {
-    document.querySelectorAll(".nav-requires-campaign").forEach((el) => {
-      el.classList.toggle("nav-disabled", !data.is_active);
-    });
-
-    document.querySelectorAll(".requires-campaign").forEach((el) => {
-      el.classList.toggle("disabled", !data.is_active);
-    });
-    const warning = document.getElementById("warning-no-campaign");
-    if (data.is_active) {
-      warning.style.display = "none";
-    } else {
-      warning.style.display = "block";
-    }
-  });
-</script>
+{% include "modals/new_person.html" %}
+<script type="module" src="{{ url_for('static', filename='js/pages/index.js') }}"></script>
+<script src="{{ url_for('static', filename='js/markdown_tab.js') }}"></script>
 
 {% endblock %}
