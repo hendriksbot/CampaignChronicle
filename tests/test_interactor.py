@@ -16,9 +16,13 @@ class TestGetPeople(ut.TestCase):
     def test_register_people_two_persons(self):
         db_people_list = [
             db.MarkdownFile(
-                "alice", pathlib.Path("path/to/alice.md"), "# Alice"
+                "alice", "# Alice", pathlib.Path("path/to/alice.md")
             ),
-            db.MarkdownFile("bob", pathlib.Path("path/to/bob.md"), "# Bob"),
+            db.MarkdownFile(
+                "bob",
+                "# Bob",
+                pathlib.Path("path/to/bob.md"),
+            ),
         ]
         self.interactor = iactr.Interactor()
         self.interactor.register_people(db_people_list)
@@ -32,15 +36,15 @@ class TestGetPeople(ut.TestCase):
     def test_re_register_people(self):
         db_people_list_a = [
             db.MarkdownFile(
-                "alice", pathlib.Path("path/to/alice.md"), "# Alice"
+                "alice", "# Alice", pathlib.Path("path/to/alice.md")
             ),
-            db.MarkdownFile("bob", pathlib.Path("path/to/bob.md"), "# Bob"),
+            db.MarkdownFile("bob", "# Bob", pathlib.Path("path/to/bob.md")),
         ]
         db_people_list_b = [
             db.MarkdownFile(
-                "carla", pathlib.Path("path/to/carla.md"), "# Carla"
+                "carla", "# Carla", pathlib.Path("path/to/carla.md")
             ),
-            db.MarkdownFile("dave", pathlib.Path("path/to/dave.md"), "# Dave"),
+            db.MarkdownFile("dave", "# Dave", pathlib.Path("path/to/dave.md")),
         ]
         self.interactor = iactr.Interactor()
         self.interactor.register_people(db_people_list_a)

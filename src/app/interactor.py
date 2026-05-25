@@ -12,20 +12,24 @@ class Interactor:
     """
 
     def register_people(self, people_files: list[db.MarkdownFile]):
-        self._people = []
+        self._people = {}
         for file in people_files:
             lines = file.content.splitlines()
             name = (
                 lines[0][2:]
                 if lines and lines[0].startswith("# ")
-                else file.stem
+                else file.path.stem
             )
-            self._people.append(ppl.Person(name=name, id=slugify(name)))
+            self._people[file.path.stem] = ppl.Person(
+                name=name, id=file.path.stem
+            )
 
     def add_person(self, name: str) -> ppl.Person:
         person = ppl.Person(name=name, id=slugify(name))
-        self._people.append(person)
+        if person.id in self._people:
+            return None
+        self._people[person.id] = person
         return person
 
     def get_people(self) -> list[ppl.Person]:
-        return self._people
+        return list(self._people.values())

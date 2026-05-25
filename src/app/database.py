@@ -7,8 +7,8 @@ from dataclasses import dataclass
 @dataclass
 class MarkdownFile:
     name: str
-    path: pathlib.Path
-    content: str
+    content: str = ""
+    path: pathlib.Path | None = None
 
 
 class FileDatabase:
@@ -22,7 +22,19 @@ class FileDatabase:
         registered_files = []
         for file in files:
             registered_files.append(
-                MarkdownFile(file.stem, file, file.read_text(encoding="utf-8"))
+                MarkdownFile(
+                    name=file.stem,
+                    path=file,
+                    content=file.read_text(encoding="utf-8"),
+                )
             )
 
         return registered_files
+
+    def exist_file(self, file: MarkdownFile) -> bool:
+        file_path = self._path_to_src / f"{file.name}.md"
+        return file_path.exists()
+
+    def create_file(self, file: MarkdownFile):
+        file_path = self._path_to_src / f"{file.name}.md"
+        file_path.write_text(data=file.content, encoding="utf-8")

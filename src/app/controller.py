@@ -52,8 +52,12 @@ class Controller(evh_if.EventHandlerInterface):
 
     def request_create_person(self, data: dict):
         person = self._interactor.add_person(data["name"])
-        file_name = person.id + ".md"
-        file_path = self._campaign_path.people() / file_name
-        file_path.write_text(f"# {person.name}\n", encoding="utf-8")
+        if not person:
+            return
+        file = db.MarkdownFile(person.id, content=f"# {person.name}\n")
+        if self._file_dbs["people"].exist_file(file):
+            return
+        else:
+            self._file_dbs["people"].create_file(file)
 
         self.request_people_list()
