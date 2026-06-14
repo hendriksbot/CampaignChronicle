@@ -10,8 +10,8 @@
   text-decoration: none;
   color: inherit;
 
-  background-color: #2a2a3d;
-  border: 1px solid #3a3a50;
+  background-color: var(--background-object-color);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 1rem;
 
@@ -24,13 +24,19 @@
 .person-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  border-color: #5c7cfa;
+  border-color: var(--btn-primary-hover-color);
+  color: var(--text-color);
+  text-decoration: none;
 }
 
 /* Name */
-.person-card h3 {
+.person-card h1 {
   margin-bottom: 0.4rem;
   font-size: 1.1rem;
+}
+
+.person-card a:hover {
+  color: var(--text-color);
 }
 
 /* Optional Meta Info */

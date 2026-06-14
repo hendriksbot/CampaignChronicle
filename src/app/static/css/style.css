@@ -1,5 +1,12 @@
 :root {
+  --text-color: #f4f4f4;
   --error: #aa5555;
+  --border-color: #444;
+  --btn-primary-color: #5c7cfa;
+  --btn-primary-hover-color: #4c6ef5;
+  --background-object-color: #2c2c3e;
+  --line-height: 1.6;
+  --heading-line-height: 1.2;
 }
 
 /* Reset */
@@ -12,20 +19,178 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #1e1e2f;
-  color: #f4f4f4;
+  color: var(--text-color);
 }
+
+/* ==========================
+   TYPOGRAPHY
+   ========================== */
+
+/* --------------------------
+   Headings
+   -------------------------- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: var(--heading-line-height);
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+h5 {
+  font-size: 1.1rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child {
+  margin-top: 0;
+}
+
+/* --------------------------
+   Paragraphs
+   -------------------------- */
+
+p {
+  line-height: var(--line-height);
+  margin-bottom: 1rem;
+}
+
+/* --------------------------
+   Lists
+   -------------------------- */
+
+ul,
+ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  line-height: var(--line-height);
+}
+
+li {
+  margin-bottom: 0.25rem;
+}
+
+li > ul,
+li > ol {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+/* --------------------------
+   Links
+   -------------------------- */
+
+a {
+  text-decoration: none;
+  color: var(--btn-primary-color);
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--btn-primary-hover-color);
+}
+
+/* --------------------------
+   Emphasis
+   -------------------------- */
+
+strong {
+  font-weight: 700;
+}
+
+em {
+  font-style: italic;
+}
+
+mark {
+  padding: 0.1rem 0.2rem;
+  border-radius: 3px;
+}
+
+/* --------------------------
+   Quotes
+   -------------------------- */
+
+blockquote {
+  margin: 1rem 0;
+  padding-left: 1rem;
+  border-left: 4px solid var(--border-color);
+  font-style: italic;
+}
+
+/* --------------------------
+   Horizontal Rule
+   -------------------------- */
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 2rem 0;
+}
+
+/* --------------------------
+   Tables
+   -------------------------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+th,
+td {
+  padding: 0.75rem;
+  text-align: left;
+}
+
+td {
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color);
+}
+
+/* ==========================
+   OTHER
+   ========================== */
 
 /* Header */
 .header {
   text-align: center;
   padding: 2rem 1rem;
   background-color: #2c2c3e;
-  border-bottom: 1px solid #444;
-}
-
-.header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .subtitle {
@@ -44,10 +209,10 @@ body {
 
 /* Cards */
 .card {
-  background-color: #2a2a3d;
+  background-color: var(--background-object-color);
   padding: 1.5rem;
   border-radius: 10px;
-  border: 1px solid #3a3a50;
+  border: 1px solid var(--border-color);
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
@@ -63,7 +228,7 @@ body {
 }
 
 .card p {
-  color: #ccc;
+  color: var(--text-color);
   margin-bottom: 1rem;
 }
 
@@ -77,9 +242,9 @@ body {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   text-decoration: none;
-  color: #f4f4f4;
+  color: var(--text-color);
   background-color: transparent;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
   transition: background 0.2s ease;
   cursor: pointer;
 }
@@ -87,15 +252,18 @@ body {
 .btn:hover {
   background-color: #2c2c3e;
   border-color: #5c7cfa;
+  text-decoration: none;
+  color: var(--text-color);
 }
 
 .btn.primary {
-  background-color: #5c7cfa;
+  background-color: var(--btn-primary-color);
   border: none;
 }
 
 .btn.primary:hover {
-  background-color: #4c6ef5;
+  background-color: var(--btn-primary-hover-color);
+  color: var(--text-color);
 }
 
 /* Footer */
@@ -118,8 +286,8 @@ input.error {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.5rem;
-  background-color: #2c2c3e;
-  border-bottom: 1px solid #444;
+  background-color: var(--background-object-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* Left & Right Sections */
@@ -134,11 +302,16 @@ input.error {
 .nav-logo {
   font-weight: bold;
   text-decoration: none;
-  color: #f4f4f4;
+  color: var(--text-color);
   margin-right: 1rem;
 }
 
-/* Links */
+.nav-logo:hover {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+/* navigartion links */
 .nav-link {
   text-decoration: none;
   color: #ccc;
@@ -148,6 +321,7 @@ input.error {
 
 .nav-link:hover {
   color: #fff;
+  text-decoration: none;
 }
 
 .nav-disabled {
@@ -200,7 +374,7 @@ input.error {
 
 .tab {
   padding: 0.3rem 0.6rem;
-  border: 1px solid #555;
+  border: 1px solid var(--border-color);
   background: none;
   color: #ccc;
   cursor: pointer;
