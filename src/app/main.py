@@ -40,7 +40,7 @@ def main(
     )
 ):
     locator = make_locator()
-    gui_config = {"flask_secret_key": "to_be_replaced", "port": 5000}
+    gui_config = {"flask_secret_key": "to_be_replaced", "port": 5001}
     gui = flask_gui.FlaskGui(config=gui_config, locator=locator)
     controller = ctr.Controller(gui=gui, interactor=iactr.Interactor())
     gui.bind_event_handler(controller)
