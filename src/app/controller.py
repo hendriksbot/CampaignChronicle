@@ -7,6 +7,7 @@ import app.guis.file_gui as file_gui
 import app.interactor as iactr
 import app.domain.configs as configs
 import app.database as db
+import app.presenter as presenter
 
 
 class Controller(evh_if.EventHandlerInterface):
@@ -15,6 +16,7 @@ class Controller(evh_if.EventHandlerInterface):
     def __init__(self, gui: app.guis.gui.Gui, interactor: iactr.Interactor):
         self._gui = gui
         self._interactor = interactor
+        self._presenter = presenter.Presenter()
         self._campaign_path: configs.CampaignPath | None = None
 
     def start_app(self, is_debug_mode: bool = False):
@@ -46,7 +48,8 @@ class Controller(evh_if.EventHandlerInterface):
 
     def request_people_list(self):
         people_list = [
-            {"name": person.name} for person in self._interactor.get_people()
+            {"name": person.name, "id": person.id}
+            for person in self._interactor.get_people()
         ]
         self._gui.emit_dict("updated_people_list", {"people": people_list})
 
@@ -61,3 +64,18 @@ class Controller(evh_if.EventHandlerInterface):
             self._file_dbs["people"].create_file(file)
 
         self.request_people_list()
+
+    def request_person(self, data):
+        try:
+            person = self._interactor.get_person(data["id"])
+        except iactr.InvalidPersonError:
+            return
+
+        try:
+            file = self._file_dbs["people"].get_file(person.id)
+        except FileNotFoundError:
+            return
+
+        vm = self._presenter.show_person(person, file_content=file.content)
+
+        self._gui.emit_dict("updated_person", vars(vm))

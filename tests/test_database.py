@@ -56,3 +56,25 @@ class TestFileDatabase(ut.TestCase):
         file_db = db.FileDatabase(db_path)
         file = db.MarkdownFile(name="salazar")
         self.assertTrue(file_db.exist_file(file))
+
+    def test_get_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = pathlib.Path(tmp)
+            file_db = db.FileDatabase(db_path)
+
+            (db_path / "alice.md").write_text("# Alice")
+
+            act_file = file_db.get_file("alice")
+
+            self.assertEqual(
+                db.MarkdownFile("alice", "# Alice", db_path / "alice.md"),
+                act_file,
+            )
+
+    def test_get_file_failed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = pathlib.Path(tmp)
+            file_db = db.FileDatabase(db_path)
+
+            with self.assertRaises(FileNotFoundError):
+                file_db.get_file("alice")
