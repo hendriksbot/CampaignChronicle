@@ -1,7 +1,6 @@
 """this module tests the interactor module"""
 
 import unittest as ut
-import tempfile
 import pathlib
 import app.interactor as iactr
 import app.domain.people as ppl
@@ -10,7 +9,7 @@ import app.database as db
 
 class TestGetPeople(ut.TestCase):
 
-    def test_set_path(self):
+    def setUp(self):
         self.interactor = iactr.Interactor()
 
     def test_register_people_two_persons(self):
@@ -24,13 +23,16 @@ class TestGetPeople(ut.TestCase):
                 pathlib.Path("path/to/bob.md"),
             ),
         ]
-        self.interactor = iactr.Interactor()
         self.interactor.register_people(db_people_list)
         people_list = self.interactor.get_people()
 
         self.assertListEqual(
             [ppl.Person("Alice", "alice"), ppl.Person("Bob", "bob")],
             people_list,
+        )
+
+        self.assertEqual(
+            ppl.Person("Alice", "alice"), self.interactor.get_person("alice")
         )
 
     def test_re_register_people(self):
@@ -46,7 +48,6 @@ class TestGetPeople(ut.TestCase):
             ),
             db.MarkdownFile("dave", "# Dave", pathlib.Path("path/to/dave.md")),
         ]
-        self.interactor = iactr.Interactor()
         self.interactor.register_people(db_people_list_a)
         self.interactor.register_people(db_people_list_b)
         people_list = self.interactor.get_people()
@@ -55,3 +56,7 @@ class TestGetPeople(ut.TestCase):
             [ppl.Person("Carla", "carla"), ppl.Person("Dave", "dave")],
             people_list,
         )
+
+    def test_fail_get_person(self):
+        with self.assertRaises(iactr.InvalidPersonError):
+            self.interactor.get_person("alice")

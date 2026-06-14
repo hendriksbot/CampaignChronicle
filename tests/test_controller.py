@@ -76,7 +76,8 @@ class TestShowPeople(TestCampaignSetup):
         ]
         self.controller.request_people_list()
         self.mock_gui.emit_dict.assert_called_once_with(
-            "updated_people_list", {"people": [{"name": "Bobby"}]}
+            "updated_people_list",
+            {"people": [{"name": "Bobby", "id": "bobby"}]},
         )
 
 
@@ -110,7 +111,8 @@ class TestCreateNewPerson(TestCampaignSetup):
         )
 
         self.mock_gui.emit_dict.assert_called_once_with(
-            "updated_people_list", {"people": [{"name": "Salazar"}]}
+            "updated_people_list",
+            {"people": [{"name": "Salazar", "id": "salazar"}]},
         )
 
     @patch("app.database.FileDatabase")

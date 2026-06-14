@@ -21,3 +21,7 @@ class EventHandlerInterface(ABC):
     @abstractmethod
     def request_create_person(self, data: dict):
         pass
+
+    @abstractmethod
+    def request_person(self, data: dict):
+        pass

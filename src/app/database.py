@@ -35,6 +35,12 @@ class FileDatabase:
         file_path = self._path_to_src / f"{file.name}.md"
         return file_path.exists()
 
+    def get_file(self, name: str) -> MarkdownFile:
+        file = self._path_to_src / f"{name}.md"
+        return MarkdownFile(
+            name=file.stem, path=file, content=file.read_text(encoding="utf-8")
+        )
+
     def create_file(self, file: MarkdownFile):
         file_path = self._path_to_src / f"{file.name}.md"
         file_path.write_text(data=file.content, encoding="utf-8")

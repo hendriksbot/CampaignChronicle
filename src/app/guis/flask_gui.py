@@ -51,6 +51,12 @@ class FlaskGui(gui.Gui):
                 "people.html", app_version=_version.version
             )
 
+        @self._app.route("/people/<person_id>")
+        def render_person_page(person_id):
+            return flask.render_template(
+                "person.html", app_version=_version.version, person_id=person_id
+            )
+
         @self._socketio.on("request_set_campaign_folder")
         def request_set_campaign_folder():
             self._evh.request_set_campaign_folder()
@@ -66,3 +72,7 @@ class FlaskGui(gui.Gui):
         @self._socketio.on("request_create_person")
         def request_create_person(data):
             self._evh.request_create_person(data)
+
+        @self._socketio.on("request_person")
+        def request_person(data):
+            self._evh.request_person(data)
