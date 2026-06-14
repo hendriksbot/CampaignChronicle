@@ -20,10 +20,10 @@ function renderPeople(data) {
 
 function createPersonCard(person) {
   const card = document.createElement("a");
-  card.className = "person-card disabled";
-  card.href = "/people";
+  card.className = "person-card";
+  card.href = "/people/" + person.id;
 
-  const name = document.createElement("h3");
+  const name = document.createElement("h1");
   name.textContent = person.name;
 
   card.appendChild(name);

@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block title %}{{ person_id }}{% endblock %} {% block head_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/person.css') }}" />
+{% endblock %} {% block content %}
+<div class="person-container" id="person-container">
+  <h1 id="person-name">Lade Person ...</h1>
+</div>
+
+<script>
+  const PERSON_ID = "{{ person_id }}";
+</script>
+
+<script type="module" src="{{ url_for('static', filename='js/pages/person.js') }}"></script>
+{% endblock %}
