@@ -6,6 +6,7 @@ socket.emit("request_person", {
 
 socket.on("updated_person", (person) => {
   if (person.id === PERSON_ID) {
-    document.getElementById("person-container").innerHTML = person.markdown_rendered;
+    document.getElementById("person-container").dataset.loaded = "true";
+    document.getElementById("person-text-container").innerHTML = person.markdown_rendered;
   }
 });

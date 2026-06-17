@@ -266,6 +266,31 @@ th {
   color: var(--text-color);
 }
 
+.icon-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2.5rem;
+  height: 2.5rem;
+
+  border: none;
+}
+
+.icon-btn:hover {
+  border: 1px solid var(--btn-primary-color);
+}
+
+.icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  fill: currentColor;
+}
+
 /* Footer */
 .footer {
   text-align: center;
