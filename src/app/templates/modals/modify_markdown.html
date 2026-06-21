@@ -1,0 +1,28 @@
+<div id="modify-markdown-modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Text bearbeiten</h2>
+      <button class="modal-close">×</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- future markdown -->
+      <div id="markdown-section">
+        <div class="editor-tabs">
+          <button class="tab active" data-action="edit">Bearbeiten</button>
+          <button class="tab" data-action="preview">Vorschau</button>
+        </div>
+
+        <div class="editor-container">
+          <textarea class="editor-pane editor-input"></textarea>
+          <div class="editor-pane editor-preview hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn cancel-btn">Abbrechen</button>
+      <button class="btn primary save-btn">Speichern</button>
+    </div>
+  </div>
+</div>

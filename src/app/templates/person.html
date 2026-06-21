@@ -1,5 +1,7 @@
 {% extends "base.html" %} {% block title %}{{ person_id }}{% endblock %} {% block head_style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/person.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/markdown_editor.css') }}" />
 {% endblock %} {% block content %}
 <div class="person-container" id="person-container" data-loaded="false">
   <button id="person-edit-btn" class="btn icon-btn" title="Bearbeiten">
@@ -21,9 +23,14 @@
   </div>
 </div>
 
+{% include "modals/modify_markdown.html" %}
 <script>
   const PERSON_ID = "{{ person_id }}";
 </script>
 
+<script
+  type="module"
+  src="{{ url_for('static', filename='js/modals/markdown_editor.js') }}"
+></script>
 <script type="module" src="{{ url_for('static', filename='js/pages/person.js') }}"></script>
 {% endblock %}
