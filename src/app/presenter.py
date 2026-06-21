@@ -14,8 +14,9 @@ class Presenter:
     ) -> vm_ppl.VMPerson:
         return vm_ppl.VMPerson(
             id=person.id,
-            markdown_rendered=md.markdown(
-                file_content, extensions=["nl2br", "tables"]
-            ),
+            markdown_rendered=self.render_markdown(file_content),
             markdown_raw=file_content,
         )
+
+    def render_markdown(self, raw_str: str) -> str:
+        return md.markdown(raw_str, extensions=["nl2br", "tables"])

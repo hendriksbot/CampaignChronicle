@@ -79,3 +79,6 @@ class Controller(evh_if.EventHandlerInterface):
         vm = self._presenter.show_person(person, file_content=file.content)
 
         self._gui.emit_dict("updated_person", vars(vm))
+
+    def render_markdown(self, raw_markdown: str):
+        return self._presenter.render_markdown(raw_markdown)
