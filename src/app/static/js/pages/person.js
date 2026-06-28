@@ -6,7 +6,7 @@ socket.emit("request_person", {
   id: PERSON_ID,
 });
 
-const modal = new ModifyMarkdownModal(socket);
+const modal = new ModifyMarkdownModal(socket, "people", PERSON_ID);
 document.getElementById("person-edit-btn").addEventListener("click", () => {
   modal.open();
 });

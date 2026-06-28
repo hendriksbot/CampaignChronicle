@@ -1,13 +1,17 @@
 import { Modal } from "./modal.js";
 
 export class ModifyMarkdownModal {
-  constructor(socket) {
+  constructor(socket, type, id) {
     this.root = document.getElementById("modify-markdown-modal");
+    this.socket = socket;
+    this.type = type;
+    this.id = id;
     this.modal = new Modal(this.root);
     this.editor = new MardownEditor(this.root, socket);
     this.saveButton = this.root.querySelector(".save-btn");
     this.setupEvents();
   }
+
   open() {
     this.editor.reinit();
     this.modal.open();
@@ -22,6 +26,12 @@ export class ModifyMarkdownModal {
   }
 
   save() {
+    const markdown_raw = this.editor.getContent();
+    this.socket.emit("save_markdown", {
+      type: this.type,
+      id: this.id,
+      content: markdown_raw,
+    });
     this.close();
   }
 

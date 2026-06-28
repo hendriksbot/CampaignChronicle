@@ -81,3 +81,7 @@ class FlaskGui(gui.Gui):
         @self._socketio.on("request_person")
         def request_person(data):
             self._evh.request_person(data)
+
+        @self._socketio.on("save_markdown")
+        def save_markdown(data):
+            self._evh.save_markdown(data["type"], data["id"], data["content"])

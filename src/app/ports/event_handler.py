@@ -29,3 +29,7 @@ class EventHandlerInterface(ABC):
     @abstractmethod
     def render_markdown(self, raw_markdown: str) -> str:
         pass
+
+    @abstractmethod
+    def save_markdown(self, entity_type: str, entity_id: str, content: str):
+        pass

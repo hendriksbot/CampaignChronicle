@@ -10,6 +10,10 @@ class MarkdownFile:
     content: str = ""
     path: pathlib.Path | None = None
 
+    def write(self, content: str):
+        if self.path:
+            self.path.write_text(data=content, encoding="utf-8")
+
 
 class FileDatabase:
     """database that is file and directory based"""
