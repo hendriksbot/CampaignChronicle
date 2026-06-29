@@ -57,6 +57,11 @@ class FlaskGui(gui.Gui):
                 "person.html", app_version=_version.version, person_id=person_id
             )
 
+        @self._app.route("/api/render-markdown", methods=["POST"])
+        def render_markdown():
+            data = flask.request.get_json()
+            return {"html": self._evh.render_markdown(data["markdown"])}
+
         @self._socketio.on("request_set_campaign_folder")
         def request_set_campaign_folder():
             self._evh.request_set_campaign_folder()
@@ -76,3 +81,7 @@ class FlaskGui(gui.Gui):
         @self._socketio.on("request_person")
         def request_person(data):
             self._evh.request_person(data)
+
+        @self._socketio.on("save_markdown")
+        def save_markdown(data):
+            self._evh.save_markdown(data["type"], data["id"], data["content"])

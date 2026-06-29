@@ -1,0 +1,147 @@
+.markdown-body {
+  border: 1px solid var(--border-color);
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  height: 2rem;
+}
+
+.editor-tabs {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.25rem;
+
+  border-radius: 0.5rem;
+
+  background: var(--surface-color-snd);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 0;
+  border-radius: 6px 6px 0 0;
+}
+
+.editor-tabs .tab {
+  background: var(--surface-color-snd);
+}
+
+.editor-tabs .tab.active {
+  background: var(--surface-color-prime);
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  padding-right: 0.5rem;
+
+  min-width: 0;
+  overflow: visible;
+  position: relative;
+}
+
+.editor-toolbar.hidden {
+  display: none;
+}
+
+.toolbar-btn {
+  flex-shrink: 0;
+
+  width: 2rem;
+  height: 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid transparent;
+
+  background: transparent;
+}
+
+.toolbar-btn .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.toolbar-btn:hover {
+  border: 1px solid var(--btn-primary-color);
+}
+
+.toolbar-overflow {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.overflow-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 180px;
+
+  background: var(--surface-color-prime);
+
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+
+  padding: 0.25rem;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+
+  z-index: 100;
+}
+
+.overflow-menu.hidden {
+  display: none;
+}
+
+.overflow-menu .toolbar-btn {
+  display: flex;
+  width: 100%;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 0.4rem 0.6rem;
+}
+
+.overflow-menu .toolbar-btn .icon-label {
+  display: inline;
+  margin-left: 0.5rem;
+}
+
+.editor-container {
+  min-height: 450px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+}
+
+.editor-pane {
+  width: 100%;
+  height: 450px;
+  border: none;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: var(--surface-color-prime);
+}
+
+.editor-input {
+  outline: none;
+  font: inherit;
+  line-height: 1.6;
+  color: var(--text-color);
+  resize: vertical;
+}
+
+.editor-preview {
+  overflow-y: auto;
+}

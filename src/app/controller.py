@@ -79,3 +79,16 @@ class Controller(evh_if.EventHandlerInterface):
         vm = self._presenter.show_person(person, file_content=file.content)
 
         self._gui.emit_dict("updated_person", vars(vm))
+
+    def render_markdown(self, raw_markdown: str):
+        return self._presenter.render_markdown(raw_markdown)
+
+    def save_markdown(self, entity_type: str, entity_id: str, content: str):
+        try:
+            file = self._file_dbs[entity_type].get_file(entity_id)
+        except FileNotFoundError:
+            return
+
+        file.write(content)
+
+        self.request_person({"id": entity_id})

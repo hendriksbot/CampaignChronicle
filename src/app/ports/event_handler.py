@@ -25,3 +25,11 @@ class EventHandlerInterface(ABC):
     @abstractmethod
     def request_person(self, data: dict):
         pass
+
+    @abstractmethod
+    def render_markdown(self, raw_markdown: str) -> str:
+        pass
+
+    @abstractmethod
+    def save_markdown(self, entity_type: str, entity_id: str, content: str):
+        pass

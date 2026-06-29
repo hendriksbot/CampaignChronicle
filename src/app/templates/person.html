@@ -1,13 +1,36 @@
 {% extends "base.html" %} {% block title %}{{ person_id }}{% endblock %} {% block head_style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/person.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/markdown_editor.css') }}" />
 {% endblock %} {% block content %}
-<div class="person-container" id="person-container">
-  <h1 id="person-name">Lade Person ...</h1>
+<div class="person-container" id="person-container" data-loaded="false">
+  <button id="person-edit-btn" class="btn icon-btn" title="Bearbeiten">
+    <svg
+      viewBox="0 0 24 24"
+      class="icon"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+    </svg>
+  </button>
+  <div class="text-container" id="person-text-container">
+    <h1 id="person-name">Lade Person ...</h1>
+  </div>
 </div>
 
+{% include "modals/modify_markdown.html" %}
 <script>
   const PERSON_ID = "{{ person_id }}";
 </script>
 
+<script
+  type="module"
+  src="{{ url_for('static', filename='js/modals/markdown_editor.js') }}"
+></script>
 <script type="module" src="{{ url_for('static', filename='js/pages/person.js') }}"></script>
 {% endblock %}

@@ -1,0 +1,71 @@
+<div id="modify-markdown-modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Text bearbeiten</h2>
+      <button class="modal-close">×</button>
+    </div>
+
+    <div class="modal-body markdown-body">
+      <!-- future markdown -->
+      <div id="markdown-section">
+        <div class="editor-header">
+          <div class="editor-tabs">
+            <button class="tab active" data-action="edit">Bearbeiten</button>
+            <button class="tab" data-action="preview">Vorschau</button>
+          </div>
+
+          <div class="editor-toolbar">
+            <button class="btn toolbar-btn" data-action="bold" title="Fett">
+              <span class="icon"><strong>B</strong></span>
+              <span class="icon-label">Fett</span>
+            </button>
+
+            <button class="btn toolbar-btn" data-action="italic" title="Kursiv">
+              <span class="icon"><em>I</em></span>
+              <span class="icon-label">Kursiv</span>
+            </button>
+
+            <button class="btn toolbar-btn" data-action="heading" title="Überschrift">
+              <span class="icon">H</span>
+              <span class="icon-label">Überschrift</span>
+            </button>
+
+            <button class="btn toolbar-btn" data-action="list" title="Liste">
+              <span class="icon">•</span>
+              <span class="icon-label">Liste</span>
+            </button>
+
+            <button class="btn toolbar-btn" data-action="table" title="Tabelle">
+              <span class="icon">▦</span>
+              <span class="icon-label">Tabelle</span>
+            </button>
+
+            <button class="btn toolbar-btn" data-action="link" title="Link">
+              <span class="icon">🔗</span>
+              <span class="icon-label">Link</span>
+            </button>
+
+            <button class="btn toolbar-btn" data-action="quote" title="Zitat">
+              <span class="icon">❝</span>
+              <span class="icon-label">Zitat</span>
+            </button>
+
+            <div class="toolbar-overflow hidden">
+              <button class="btn toolbar-btn overflow-btn">⋯</button>
+              <div class="overflow-menu hidden"></div>
+            </div>
+          </div>
+        </div>
+        <div class="editor-container">
+          <textarea class="editor-pane editor-input"></textarea>
+          <div class="editor-pane editor-preview hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn cancel-btn">Abbrechen</button>
+      <button class="btn primary save-btn">Speichern</button>
+    </div>
+  </div>
+</div>
