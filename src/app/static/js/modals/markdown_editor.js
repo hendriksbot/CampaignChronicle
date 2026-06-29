@@ -9,6 +9,8 @@ export class ModifyMarkdownModal {
     this.modal = new Modal(this.root);
     this.editor = new MardownEditor(this.root, socket);
     this.saveButton = this.root.querySelector(".save-btn");
+    this.cancelButton = this.root.querySelector(".cancel-btn");
+    this.closeButton = this.root.querySelector(".modal-close");
     this.setupEvents();
   }
 
@@ -18,11 +20,17 @@ export class ModifyMarkdownModal {
   }
 
   close() {
+    this.editor.cancelContentUpdate();
+  }
+
+  #saveClose() {
     this.modal.close();
   }
 
   setupEvents() {
     this.saveButton?.addEventListener("click", () => this.save());
+    this.cancelButton?.addEventListener("click", () => this.close());
+    this.closeButton?.addEventListener("click", () => this.close());
   }
 
   save() {
@@ -32,7 +40,7 @@ export class ModifyMarkdownModal {
       id: this.id,
       content: markdown_raw,
     });
-    this.close();
+    this.#saveClose();
   }
 
   setContent(markdown_raw) {
@@ -63,6 +71,7 @@ class MardownEditor {
     this.resizeObserver.observe(this.root.querySelector(".editor-header"));
 
     this.mode = "edit";
+    this.backupContent = "";
     this.commands = {
       bold: () => this.wrapSelection("**"),
       italic: () => this.wrapSelection("*"),
@@ -220,7 +229,12 @@ class MardownEditor {
 
   setContent(value) {
     this.input.value = value;
+    this.backupContent = value;
     this.render();
+  }
+
+  cancelContentUpdate() {
+    this.input.value = this.backupContent;
   }
 
   getContent() {
