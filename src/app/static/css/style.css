@@ -1,10 +1,12 @@
 :root {
   --text-color: #f4f4f4;
-  --error: #aa5555;
+  --error: #783a3a;
   --border-color: #444;
-  --btn-primary-color: #5c7cfa;
+  --btn-primary-color: #4060dd;
   --btn-primary-hover-color: #4c6ef5;
-  --background-object-color: #2c2c3e;
+  --surface-color-prime: #1e1e2f;
+  --surface-color-snd: #272736;
+  --background-color: #2c2c3e;
   --line-height: 1.6;
   --heading-line-height: 1.2;
 }
@@ -17,9 +19,12 @@
 }
 
 body {
-  background-color: #1e1e2f;
   font-family: "Inter", Arial, Helvetica, sans-serif;
   color: var(--text-color);
+  background-color: var(--background-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* ==========================
@@ -110,7 +115,7 @@ li > ol {
 
 a {
   text-decoration: none;
-  color: var(--btn-primary-color);
+  color: var(--btn-primary-hover-color);
 }
 
 a:hover {
@@ -209,7 +214,7 @@ th {
 
 /* Cards */
 .card {
-  background-color: var(--background-object-color);
+  background-color: var(--surface-color-prime);
   padding: 1.5rem;
   border-radius: 10px;
   border: 1px solid var(--border-color);
@@ -251,7 +256,7 @@ th {
 
 .btn:hover {
   background-color: #2c2c3e;
-  border-color: #5c7cfa;
+  border-color: var(--btn-primary-color);
   text-decoration: none;
   color: var(--text-color);
 }
@@ -303,6 +308,15 @@ th {
   color: #888;
 }
 
+input {
+  outline: none;
+}
+
+input:focus-visible {
+  border-color: var(--btn-primary-hover-color);
+  box-shadow: 0 0 0 2px var(--btn-primary-hover-color);
+}
+
 input.error {
   border-color: var(--error);
   outline: none;
@@ -315,7 +329,7 @@ input.error {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.5rem;
-  background-color: var(--background-object-color);
+  background-color: var(--surface-color-prime);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -412,11 +426,11 @@ input.error {
 }
 
 .tab.active {
-  border-color: #5c7cfa;
-  background: #1e1e2f;
+  border-color: var(--btn-primary-color);
+  background: var(--background-color);
   color: white;
 }
 
 .tab:hover {
-  border-color: #5c7cfa;
+  border-color: var(--btn-primary-color);
 }

@@ -18,7 +18,7 @@
 
 /* Box */
 .modal-content {
-  background: var(--background-object-color);
+  background: var(--background-color);
   padding: 1.5rem;
   border-radius: 12px;
   width: 90%;
@@ -35,7 +35,7 @@
 .modal-close {
   background: none;
   border: none;
-  color: #ccc;
+  color: var(--text-color);
   font-size: 1.2rem;
   cursor: pointer;
 }
@@ -59,16 +59,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #f4f4f4;
+  color: var(--text-color);
 }
 
 .modal-body input {
   width: 100%;
   padding: 0.5rem;
   border-radius: 6px;
-  border: 1px solid #555;
-  background: #1e1e2f;
-  color: #fff;
+  border: 1px solid var(--border-color);
+  background: var(--surface-color-snd);
+  color: var(--text-color);
 }
 
 /* Footer */

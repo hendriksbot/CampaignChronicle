@@ -15,10 +15,18 @@
 
   border-radius: 0.5rem;
 
-  background: var(--background-object-color);
+  background: var(--surface-color-snd);
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 0;
   border-radius: 6px 6px 0 0;
+}
+
+.editor-tabs .tab {
+  background: var(--surface-color-snd);
+}
+
+.editor-tabs .tab.active {
+  background: var(--surface-color-prime);
 }
 
 .editor-toolbar {
@@ -78,7 +86,7 @@
 
   min-width: 180px;
 
-  background: var(--background-object-color);
+  background: var(--surface-color-prime);
 
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
@@ -111,7 +119,6 @@
 
 .editor-container {
   min-height: 450px;
-  background: var(--background-object-color);
   overflow: hidden;
   border: 1px solid var(--border-color);
   border-top: none;
@@ -124,7 +131,7 @@
   border: none;
   padding: 1rem;
   box-sizing: border-box;
-  background: #1e1e2f;
+  background: var(--surface-color-prime);
 }
 
 .editor-input {
