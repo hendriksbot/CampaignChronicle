@@ -1,5 +1,16 @@
+.markdown-body {
+  border: 1px solid var(--border-color);
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  height: 2rem;
+}
+
 .editor-tabs {
   display: flex;
+  flex-shrink: 0;
   gap: 0.25rem;
 
   border-radius: 0.5rem;
@@ -8,6 +19,94 @@
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 0;
   border-radius: 6px 6px 0 0;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  padding-right: 0.5rem;
+
+  min-width: 0;
+  overflow: visible;
+  position: relative;
+}
+
+.editor-toolbar.hidden {
+  display: none;
+}
+
+.toolbar-btn {
+  flex-shrink: 0;
+
+  width: 2rem;
+  height: 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid transparent;
+
+  background: transparent;
+}
+
+.toolbar-btn .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.toolbar-btn:hover {
+  border: 1px solid var(--btn-primary-color);
+}
+
+.toolbar-overflow {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.overflow-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 180px;
+
+  background: var(--background-object-color);
+
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+
+  padding: 0.25rem;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+
+  z-index: 100;
+}
+
+.overflow-menu.hidden {
+  display: none;
+}
+
+.overflow-menu .toolbar-btn {
+  display: flex;
+  width: 100%;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 0.4rem 0.6rem;
+}
+
+.overflow-menu .toolbar-btn .icon-label {
+  display: inline;
+  margin-left: 0.5rem;
 }
 
 .editor-container {

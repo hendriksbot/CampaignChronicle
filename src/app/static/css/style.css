@@ -291,6 +291,10 @@ th {
   fill: currentColor;
 }
 
+.icon-label {
+  display: none;
+}
+
 /* Footer */
 .footer {
   text-align: center;
