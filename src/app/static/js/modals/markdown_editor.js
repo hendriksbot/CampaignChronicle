@@ -63,6 +63,16 @@ class MardownEditor {
     this.resizeObserver.observe(this.root.querySelector(".editor-header"));
 
     this.mode = "edit";
+    this.commands = {
+      bold: () => this.wrapSelection("**"),
+      italic: () => this.wrapSelection("*"),
+      heading: () => this.prefixLines("# "),
+      list: () => this.prefixLines("- "),
+      quote: () => this.prefixLines("> "),
+      link: () => this.insertLink(),
+      table: () => this.insertTable(),
+    };
+
     this.setupEvents();
     this.updateToolbar();
   }
@@ -78,6 +88,22 @@ class MardownEditor {
 
     this.tabPreview.addEventListener("click", () => {
       this.switchTab("preview");
+    });
+
+    this.toolbar.addEventListener("click", (e) => {
+      const button = e.target.closest(".toolbar-btn");
+
+      if (!button) return;
+
+      const action = button.dataset.action;
+
+      if (!action) return;
+
+      const command = this.commands[action];
+
+      if (!command) return;
+
+      command();
     });
 
     const overflowBtn = this.root.querySelector(".overflow-btn");
@@ -199,5 +225,73 @@ class MardownEditor {
 
   getContent() {
     return this.input.value;
+  }
+
+  wrapSelection(prefix, suffix = prefix) {
+    const textarea = this.input;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const selected = textarea.value.substring(start, end);
+
+    const replacement = prefix + selected + suffix;
+
+    textarea.setRangeText(replacement, start, end, "select");
+
+    textarea.focus();
+  }
+
+  prefixLines(prefix) {
+    const textarea = this.input;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const value = textarea.value;
+
+    const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+    const lineEnd = value.indexOf("\n", end);
+
+    const actualEnd = lineEnd === -1 ? value.length : lineEnd;
+
+    const block = value.substring(lineStart, actualEnd);
+
+    const updated = block
+      .split("\n")
+      .map((line) => prefix + line)
+      .join("\n");
+
+    textarea.setRangeText(updated, lineStart, actualEnd, "end");
+
+    textarea.focus();
+  }
+
+  insertLink() {
+    const textarea = this.input;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const text = textarea.value.substring(start, end) || "Link text";
+
+    const markdown = `[${text}](https://)`;
+
+    textarea.setRangeText(markdown, start, end, "select");
+
+    textarea.focus();
+  }
+
+  insertTable() {
+    const table = `| Header | Header |
+| ------ | ------ |
+| Cell   | Cell   |
+`;
+
+    const textarea = this.input;
+
+    textarea.setRangeText(table, textarea.selectionStart, textarea.selectionEnd, "end");
+
+    textarea.focus();
   }
 }
