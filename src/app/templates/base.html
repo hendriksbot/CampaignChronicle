@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     {% block head_style %}{% endblock %}
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
   </head>
 
   <body>
@@ -20,7 +21,9 @@
       <div class="nav-left">
         <a href="/" class="nav-logo">Campaign Chronicle</a>
         <a href="/" class="nav-link" id="nav-home">Home</a>
-        <a href="/relations" class="nav-link nav-disabled" id="nav-relations">Beziehungen</a>
+        <a href="/relations" class="nav-link nav-requires-campaign" id="nav-relations"
+          >Beziehungen</a
+        >
         <a href="/people" class="nav-link nav-requires-campaign" id="nav-people">Personen</a>
       </div>
 

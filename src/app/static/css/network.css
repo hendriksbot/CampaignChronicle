@@ -23,23 +23,23 @@
 }
 
 .node.person {
-  background: #4f8ef7;
+  background: var(--node-person-color);
 }
 
 .node.group {
-  background: #43a047;
+  background: var(--node-group-color);
 }
 
 .node.place {
-  background: #ffb300;
+  background: var(--node-location-color);
 }
 
 .node.event {
-  background: #ab47bc;
+  background: var(--node-event-color);
 }
 
 .node.item {
-  background: #ef5350;
+  background: var(--node-item-color);
 }
 
 .stats {

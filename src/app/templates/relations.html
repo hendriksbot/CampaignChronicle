@@ -1,0 +1,9 @@
+{% extends "base.html" %} {% block title %}Relations{% endblock %} {% block head_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/relations.css') }}" />
+{% endblock %} {% block content %}
+<div class="page-header">
+  <h1>🔗 Beziehungen</h1>
+</div>
+<div id="relationship-graph"></div>
+<script type="module" src="{{ url_for('static', filename='js/pages/relations.js') }}"></script>
+{% endblock %}

@@ -45,6 +45,12 @@ class FlaskGui(gui.Gui):
                 "index.html", app_version=_version.version
             )
 
+        @self._app.route("/relations")
+        def render_relations_page():
+            return flask.render_template(
+                "relations.html", app_version=_version.version
+            )
+
         @self._app.route("/people")
         def render_people_page():
             return flask.render_template(
