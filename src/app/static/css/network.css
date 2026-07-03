@@ -1,0 +1,55 @@
+.network-preview {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+  opacity: 0.8;
+}
+
+.network-preview .node {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-color-prime);
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  cursor: default;
+}
+
+.node.hidden {
+  display: none;
+}
+
+.node.person {
+  background: #4f8ef7;
+}
+
+.node.group {
+  background: #43a047;
+}
+
+.node.place {
+  background: #ffb300;
+}
+
+.node.event {
+  background: #ab47bc;
+}
+
+.node.item {
+  background: #ef5350;
+}
+
+.stats {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.stats.hidden {
+  display: none;
+}

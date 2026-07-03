@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}{% block head_style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/network.css') }}" />
 {% endblock %} {% block content %}
 <div class="banner warning" id="warning-no-campaign">
   <div class="banner-content">
@@ -10,6 +11,28 @@
     </div>
   </div>
 </div>
+
+<section class="card disabled">
+  <h2>🔗 Beziehungen</h2>
+  <p>Wie sind Personen, Orte und Ereignisse verbunden?</p>
+
+  <div class="network-preview">
+    <span class="node person">👤</span>
+    <span class="node group hidden">⚔</span>
+    <span class="node place hidden">🏰</span>
+    <span class="node event hidden">📜</span>
+    <span class="node item hidden">🗡</span>
+  </div>
+
+  <div class="stats hidden">
+    <span>Nodes: —</span>
+    <span>Edges: —</span>
+  </div>
+
+  <div class="actions">
+    <a href="/relations" class="btn primary">Übersicht öffnen</a>
+  </div>
+</section>
 
 <section class="card requires-campaign disabled">
   <h2>👥 Personen</h2>
