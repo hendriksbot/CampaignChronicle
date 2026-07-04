@@ -5,41 +5,80 @@ export class RelationshipGraph {
 
       elements: [],
 
-      style: [
-        {
-          selector: "node",
-          style: {
-            label: "data(label)",
-            "background-color": "#6a707a",
-            color: COLORS.text,
-            "text-valign": "bottom",
-            "font-size": 8,
-          },
-        },
-        {
-          selector: "node[type='person']",
-          style: {
-            "background-color": COLORS.person,
-          },
-        },
-        {
-          selector: "edge",
-          style: {
-            label: "data(relation)",
-            "font-size": 8,
-            "curve-style": "bezier",
-            color: COLORS.text,
-            "line-color": COLORS.border,
-            "target-arrow-color": COLORS.border,
-            "target-arrow-shape": "none",
-          },
-        },
-      ],
+      style: [],
 
       layout: {
         name: "cose",
+        nodeRepulsion: 10000,
+        idealEdgeLength: 120,
+        randomize: false,
+        gravity: 0.25,
+        fit: true,
+        componentSpacing: 200,
       },
     });
+    this.relationshipDefinitions = new Map();
+  }
+
+  setConfigurations(config) {
+    this.relationshipDefinitions.clear();
+    for (const def of config.relation_definitions) {
+      this.relationshipDefinitions.set(def.type, def);
+    }
+    const styles = [
+      // Default node style
+      {
+        selector: "node",
+        style: {
+          label: "data(label)",
+          "background-color": "#6a707a",
+          color: COLORS.text,
+          "text-valign": "bottom",
+          "font-size": 8,
+          "text-wrap": "wrap",
+          "text-max-width": 60,
+          "text-overflow-wrap": "ellipsis",
+        },
+      },
+      // Person node style
+      {
+        selector: "node[type='person']",
+        style: {
+          "background-color": COLORS.person,
+        },
+      },
+
+      // Default edge style
+      {
+        selector: "edge",
+        style: {
+          label: "data(label)",
+          "font-size": 8,
+          "curve-style": "bezier",
+          color: COLORS.text,
+          "line-color": COLORS.border,
+          "line-style": "solid",
+        },
+      },
+    ];
+
+    for (const def of this.relationshipDefinitions.values()) {
+      styles.push({
+        selector: `edge[type='${def.type}']`,
+        style: {
+          "line-color": def.style?.["line-color"] || COLORS.border,
+          "line-style": def.style?.["line-style"] || "solid",
+          "source-arrow-shape": def.style?.["source-arrow-shape"] || "none",
+          "target-arrow-shape": def.style?.["target-arrow-shape"] || "none",
+          "target-arrow-color": def.style?.["line-color"] || COLORS.border,
+          "source-arrow-color": def.style?.["line-color"] || COLORS.border,
+        },
+      });
+    }
+
+    this.cy.style().resetToDefault();
+    this.cy.style(styles);
+    console.log("[Graph] Configuration loaded:", config);
   }
 
   setData(nodes, edges) {
