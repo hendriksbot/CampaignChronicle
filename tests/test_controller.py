@@ -132,3 +132,43 @@ class TestCreateNewPerson(TestCampaignSetup):
         self.mock_interactor.add_person.return_value = None
 
         self.controller.request_create_person(data)
+
+
+class TestInitRelations(TestCampaignSetup):
+    """tests for relation initialization"""
+
+    def test_initial_relation_request(self):
+
+        self.mock_interactor.get_people.return_value = [
+            ppl.Person("Bobby", "bobby"),
+            ppl.Person("Alice", "alice"),
+        ]
+
+        self.controller.request_initial_relations_data()
+
+        exp_vm = {
+            "config": {"relation_definitions": []},
+            "nodes": [
+                {
+                    "data": {
+                        "id": "bobby",
+                        "label": "Bobby",
+                        "type": "person",
+                        "href": "/person/bobby",
+                    }
+                },
+                {
+                    "data": {
+                        "id": "alice",
+                        "label": "Alice",
+                        "type": "person",
+                        "href": "/person/alice",
+                    }
+                },
+            ],
+            "edges": [],
+        }
+
+        self.mock_gui.emit_dict.assert_called_once_with(
+            "initialized_relations", exp_vm
+        )

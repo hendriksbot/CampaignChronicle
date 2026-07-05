@@ -92,3 +92,24 @@ class Controller(evh_if.EventHandlerInterface):
         file.write(content)
 
         self.request_person({"id": entity_id})
+
+    def request_initial_relations_data(self):
+        people_list = self._interactor.get_people()
+
+        nodes = [
+            {
+                "data": {
+                    "id": person.id,
+                    "label": person.name,
+                    "type": "person",
+                    "href": f"/person/{person.id}",
+                }
+            }
+            for person in people_list
+        ]
+        vm = {
+            "config": {"relation_definitions": []},
+            "nodes": nodes,
+            "edges": [],
+        }
+        self._gui.emit_dict("initialized_relations", vm)

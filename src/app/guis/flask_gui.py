@@ -76,6 +76,10 @@ class FlaskGui(gui.Gui):
         def request_reload_index():
             self._evh.request_reload_index()
 
+        @self._socketio.on("request_init_relations_data")
+        def request_initial_relations_data():
+            self._evh.request_initial_relations_data()
+
         @self._socketio.on("request_people_list")
         def request_people_list():
             self._evh.request_people_list()
