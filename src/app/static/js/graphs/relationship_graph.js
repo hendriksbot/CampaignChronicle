@@ -18,6 +18,12 @@ export class RelationshipGraph {
       },
     });
     this.relationshipDefinitions = new Map();
+    this.contextMenus = new Map();
+  }
+
+  destroy() {
+    this.#destroyContextMenus();
+    this.cy.destroy();
   }
 
   setConfigurations(config) {
@@ -82,6 +88,22 @@ export class RelationshipGraph {
     this.#bindInteractions();
   }
 
+  #createContextMenu(key, options) {
+    this.contextMenus.get(key)?.destroy();
+
+    const menu = new RelationContextMenu(this.cy);
+
+    this.contextMenus.set(key, menu);
+  }
+
+  #destroyContextMenus() {
+    for (const menu of this.contextMenus.values()) {
+      menu.destroy();
+    }
+
+    this.contextMenus.clear();
+  }
+
   #bindInteractions() {
     this.cy.on("tap", "node", function () {
       try {
@@ -92,6 +114,7 @@ export class RelationshipGraph {
         window.location.href = this.data("href");
       }
     });
+    this.cxtmenu = new RelationContextMenu(this.cy);
   }
 
   setData(nodes, edges) {
@@ -120,3 +143,31 @@ const COLORS = {
   border: styles.getPropertyValue("--border-color").trim(),
   person: styles.getPropertyValue("--node-person-color").trim(),
 };
+
+class RelationContextMenu {
+  constructor(cy) {
+    this.cy = cy;
+    this.menu = this.cy.cxtmenu({
+      outsideMenuCancel: 1, // number cancels, true doesn't
+      selector: "node",
+      commands: [
+        {
+          content: "✏ Edit",
+          select: (node) => {
+            console.log("clicked edit");
+          },
+        },
+        {
+          content: "➕ Add Relationship",
+          select: (node) => {
+            console.log("clicked add relationsship");
+          },
+        },
+      ],
+    });
+  }
+
+  destroy() {
+    this.menu.destroy();
+  }
+}
