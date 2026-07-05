@@ -79,6 +79,19 @@ export class RelationshipGraph {
     this.cy.style().resetToDefault();
     this.cy.style(styles);
     console.log("[Graph] Configuration loaded:", config);
+    this.#bindInteractions();
+  }
+
+  #bindInteractions() {
+    this.cy.on("tap", "node", function () {
+      try {
+        // your browser may block popups
+        window.open(this.data("href"));
+      } catch (e) {
+        // fall back on url change
+        window.location.href = this.data("href");
+      }
+    });
   }
 
   setData(nodes, edges) {
