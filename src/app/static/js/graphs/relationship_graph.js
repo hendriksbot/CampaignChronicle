@@ -1,5 +1,8 @@
-export class RelationshipGraph {
+import { EventEmitter } from "../utils/event_emitter.js";
+
+export class RelationshipGraph extends EventEmitter {
   constructor(containerId) {
+    super();
     this.cy = cytoscape({
       container: document.getElementById(containerId),
 
@@ -240,6 +243,16 @@ export class RelationshipGraph {
 
     console.log(sourceNode);
     console.log(targetNode);
+    this.emit("createRelation", {
+      source: {
+        id: sourceNode.data("id"),
+        label: sourceNode.data("label"),
+      },
+      target: {
+        id: targetNode.data("id"),
+        label: targetNode.data("label"),
+      },
+    });
   }
 }
 
