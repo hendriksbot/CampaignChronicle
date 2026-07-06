@@ -1,0 +1,43 @@
+<div id="new-relation-modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>🔗 Beziehung hinzufügen</h2>
+      <button class="modal-close">×</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Source -->
+      <div class="modal-form-group">
+        <label for="relation-source">Von</label>
+        <input id="relation-source" type="text" readonly />
+      </div>
+
+      <!-- Target -->
+      <div class="modal-form-group">
+        <label for="relation-target">Zu</label>
+        <input id="relation-target" type="text" readonly />
+      </div>
+
+      <!-- Relation Type -->
+      <div class="modal-form-group">
+        <label for="relation-type">Beziehung</label>
+        <select id="relation-type">
+          <!-- Wird per JS gefüllt -->
+        </select>
+      </div>
+
+      <!-- Direction (optional, nur für gerichtete Beziehungen anzeigen) -->
+      <div class="modal-form-group hidden" id="relation-direction-group">
+        <label for="relation-direction">Richtung</label>
+        <select id="relation-direction">
+          <!-- Wird per JS gefüllt -->
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn cancel-btn">Abbrechen</button>
+      <button class="btn primary save-btn">Speichern</button>
+    </div>
+  </div>
+</div>

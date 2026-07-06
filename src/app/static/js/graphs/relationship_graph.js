@@ -48,9 +48,11 @@ export class RelationshipGraph extends EventEmitter {
           "background-color": "#6a707a",
           color: COLORS.text,
           "text-valign": "bottom",
-          "font-size": 8,
+          "font-size": 3,
           "text-wrap": "wrap",
           "text-max-width": 60,
+          width: 10,
+          height: 10,
         },
       },
       // Person node style
@@ -66,11 +68,12 @@ export class RelationshipGraph extends EventEmitter {
         selector: "edge",
         style: {
           label: "data(label)",
-          "font-size": 8,
+          "font-size": 3,
           "curve-style": "bezier",
           color: COLORS.text,
           "line-color": COLORS.border,
           "line-style": "solid",
+          width: 1,
         },
       },
 

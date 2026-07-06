@@ -1,7 +1,13 @@
 import { RelationshipGraph } from "../graphs/relationship_graph.js";
+import { NewRelationModal } from "../modals/new_relation.js";
 
 const socket = io();
 const graph = new RelationshipGraph("relationship-graph");
+const relationModal = new NewRelationModal(socket);
+
+graph.on("createRelation", ({ source, target }) => {
+  relationModal.open(source, target, graph.relationshipDefinitions);
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   socket.emit("request_init_relations_data");

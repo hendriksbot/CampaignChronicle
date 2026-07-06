@@ -327,6 +327,21 @@ input.error {
   box-shadow: 0 0 0 2px #ff4d4f33;
 }
 
+select {
+  outline: none;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--surface-color-snd);
+  color: var(--text-color);
+}
+
+select:focus-visible {
+  border-color: var(--btn-primary-hover-color);
+  box-shadow: 0 0 0 2px var(--btn-primary-hover-color);
+}
+
 /* Navbar */
 .navbar {
   display: flex;
