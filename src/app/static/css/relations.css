@@ -1,7 +1,36 @@
+.graph-container {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+}
+
+.graph {
+  flex: 1 1 auto;
+}
+
 #relationship-graph {
   width: 100vw;
   min-height: 450px;
   margin-left: calc(50% - 50vw);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
+}
+
+.graph-banner {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0.75rem 1rem;
+
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+
+  background: var(--surface-color-prime);
+  margin-bottom: 0.75rem;
+}
+
+.graph-banner.hidden {
+  display: none;
 }

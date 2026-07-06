@@ -4,6 +4,16 @@
 <div class="page-header">
   <h1>🔗 Beziehungen</h1>
 </div>
-<div id="relationship-graph"></div>
+<div class="graph-container">
+  <div id="graph-mode-banner" class="graph-banner hidden">
+    <div class="graph-banner-content">
+      <div>
+        <strong id="graph-mode-title"> Beziehung erstellen </strong>
+        <div id="graph-mode-description">Wähle den Zielcharakter.</div>
+      </div>
+    </div>
+  </div>
+  <div id="relationship-graph" class="graph"></div>
+</div>
 <script type="module" src="{{ url_for('static', filename='js/pages/relations.js') }}"></script>
 {% endblock %}
