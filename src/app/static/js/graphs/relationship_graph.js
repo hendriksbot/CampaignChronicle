@@ -48,7 +48,7 @@ export class RelationshipGraph extends EventEmitter {
           "background-color": "#6a707a",
           color: COLORS.text,
           "text-valign": "bottom",
-          "font-size": 3,
+          "font-size": 6,
           "text-wrap": "wrap",
           "text-max-width": 60,
           width: 10,
