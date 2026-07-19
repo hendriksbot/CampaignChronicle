@@ -69,4 +69,57 @@ RELATIONSHIP_DEFINITIONS = {
             "target-arrow-shape": "none",
         },
     },
+    "rival": {
+        "display_name": "Rivale von",
+        "directed": False,
+        "style": {
+            "line-color": "#F9A825",
+            "line-style": "dashed",
+            "source-arrow-shape": "none",
+            "target-arrow-shape": "none",
+        },
+    },
+    "mentor_of": {
+        "display_name": "Mentor von",
+        "directed": True,
+        "inverse_display_name": "Schüler von",
+        "style": {
+            "line-color": "#26A69A",
+            "line-style": "solid",
+            "source-arrow-shape": "none",
+            "target-arrow-shape": "triangle",
+        },
+    },
+    "leader_of": {
+        "display_name": "Anführer von",
+        "directed": True,
+        "inverse_display_name": "angeführt von",
+        "style": {
+            "line-color": "#FB8C00",
+            "line-style": "solid",
+            "source-arrow-shape": "none",
+            "target-arrow-shape": "triangle",
+        },
+    },
+    "works_for": {
+        "display_name": "Arbeitet für",
+        "directed": True,
+        "inverse_display_name": "Beschäftigt",
+        "style": {
+            "line-color": "#FF9800",
+            "line-style": "solid",
+            "source-arrow-shape": "none",
+            "target-arrow-shape": "triangle",
+        },
+    },
+    "is": {
+        "display_name": "ist",
+        "directed": False,
+        "style": {
+            "line-color": "#7E57C2",
+            "line-style": "solid",
+            "source-arrow-shape": "diamond",
+            "target-arrow-shape": "diamond",
+        },
+    },
 }
