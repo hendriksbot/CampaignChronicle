@@ -6,6 +6,7 @@ import pathlib
 import app.controller as ctr
 import app.guis.file_gui as file_gui
 import app.domain.people as ppl
+import app.domain.relations as rel
 import app.database as db
 
 
@@ -137,12 +138,19 @@ class TestCreateNewPerson(TestCampaignSetup):
 class TestInitRelations(TestCampaignSetup):
     """tests for relation initialization"""
 
-    def test_initial_relation_request(self):
+    @patch("app.domain.relations.get_relation_type_definitions")
+    def test_initial_relation_request(self, mock_get_defs: MagicMock):
 
         self.mock_interactor.get_people.return_value = [
             ppl.Person("Bobby", "bobby"),
             ppl.Person("Alice", "alice"),
         ]
+
+        self.mock_interactor.get_relations.return_value = [
+            rel.Relation("friend", "a2b", "alice", "bob")
+        ]
+
+        mock_get_defs.return_value = []
 
         self.controller.request_initial_relations_data()
 
@@ -166,7 +174,17 @@ class TestInitRelations(TestCampaignSetup):
                     }
                 },
             ],
-            "edges": [],
+            "edges": [
+                {
+                    "data": {
+                        "id": "a2b",
+                        "label": "befreundet",
+                        "type": "friend",
+                        "source": "alice",
+                        "target": "bob",
+                    }
+                }
+            ],
         }
 
         self.mock_gui.emit_dict.assert_called_once_with(

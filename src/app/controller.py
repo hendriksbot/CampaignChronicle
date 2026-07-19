@@ -6,6 +6,7 @@ import app.guis.gui
 import app.guis.file_gui as file_gui
 import app.interactor as iactr
 import app.domain.configs as configs
+import app.domain.relations as rel
 import app.database as db
 import app.presenter as presenter
 
@@ -93,23 +94,43 @@ class Controller(evh_if.EventHandlerInterface):
 
         self.request_person({"id": entity_id})
 
+    def _create_edges_list(self) -> list:
+        return [
+            self._presenter.show_edge(relation)
+            for relation in self._interactor.get_relations()
+        ]
+
+    def _create_graph_config(self) -> dict:
+        definitions = rel.get_relation_type_definitions()
+        return {
+            "relation_definitions": self._presenter.create_relation_definitions(
+                definitions
+            )
+        }
+
     def request_initial_relations_data(self):
         people_list = self._interactor.get_people()
 
-        nodes = [
-            {
-                "data": {
-                    "id": person.id,
-                    "label": person.name,
-                    "type": "person",
-                    "href": f"/person/{person.id}",
-                }
-            }
-            for person in people_list
-        ]
+        nodes = [self._presenter.show_node(person) for person in people_list]
         vm = {
-            "config": {"relation_definitions": []},
+            "config": self._create_graph_config(),
             "nodes": nodes,
-            "edges": [],
+            "edges": self._create_edges_list(),
         }
         self._gui.emit_dict("initialized_relations", vm)
+
+    def request_create_relation(self, data):
+        self._interactor.add_relation(
+            data["source_id"],
+            data["target_id"],
+            data["type"],
+        )
+        nodes = [
+            self._presenter.show_node(person)
+            for person in self._interactor.get_people()
+        ]
+        vm = {
+            "nodes": nodes,
+            "edges": self._create_edges_list(),
+        }
+        self._gui.emit_dict("updated_relations", vm)

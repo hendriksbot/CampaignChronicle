@@ -80,6 +80,10 @@ class FlaskGui(gui.Gui):
         def request_initial_relations_data():
             self._evh.request_initial_relations_data()
 
+        @self._socketio.on("request_create_relation")
+        def request_create_relation(data):
+            self._evh.request_create_relation(data)
+
         @self._socketio.on("request_people_list")
         def request_people_list():
             self._evh.request_people_list()

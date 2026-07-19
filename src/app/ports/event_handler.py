@@ -37,3 +37,7 @@ class EventHandlerInterface(ABC):
     @abstractmethod
     def request_initial_relations_data(self):
         pass
+
+    @abstractmethod
+    def request_create_relation(self, data: dict):
+        pass
