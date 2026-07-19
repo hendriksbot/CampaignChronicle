@@ -7,6 +7,10 @@
   --surface-color-prime: #1e1e2f;
   --surface-color-snd: #272736;
   --background-color: #2c2c3e;
+  --node-person-color: #4f8ef7;
+  --node-group-color: #43a047;
+  --node-location-color: #ffb300;
+  --node-event-color: #ab47bc;
   --line-height: 1.6;
   --heading-line-height: 1.2;
 }
@@ -321,6 +325,21 @@ input.error {
   border-color: var(--error);
   outline: none;
   box-shadow: 0 0 0 2px #ff4d4f33;
+}
+
+select {
+  outline: none;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--surface-color-snd);
+  color: var(--text-color);
+}
+
+select:focus-visible {
+  border-color: var(--btn-primary-hover-color);
+  box-shadow: 0 0 0 2px var(--btn-primary-hover-color);
 }
 
 /* Navbar */

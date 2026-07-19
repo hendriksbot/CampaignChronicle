@@ -10,3 +10,6 @@ class CampaignPath:
 
     def people(self) -> pathlib.Path:
         return self.campaign / "people"
+
+    def chronicle(self) -> pathlib.Path:
+        return self.campaign / ".chronicle"

@@ -21,7 +21,7 @@ function renderPeople(data) {
 function createPersonCard(person) {
   const card = document.createElement("a");
   card.className = "person-card";
-  card.href = "/people/" + person.id;
+  card.href = "/person/" + person.id;
 
   const name = document.createElement("h1");
   name.textContent = person.name;

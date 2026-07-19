@@ -6,6 +6,7 @@ import pathlib
 import app.controller as ctr
 import app.guis.file_gui as file_gui
 import app.domain.people as ppl
+import app.domain.relations as rel
 import app.database as db
 
 
@@ -29,8 +30,12 @@ class TestSetCampaignFolder(TestCampaignSetup):
         mock_ask_for_dir.assert_called_once_with(title="Select folder...")
         self.mock_gui.emit_dict.assert_not_called()
 
+    @patch("app.controller.FileHandler.load_relations")
+    @patch("app.controller.create_chronicle_dir")
     @patch("app.guis.file_gui.DirectorySelectorGui.ask_for_directory")
-    def test_valid_dir(self, mock_ask_for_dir: Mock):
+    def test_valid_dir(
+        self, mock_ask_for_dir: Mock, stub_create_dir, stub_load_relation
+    ):
         mock_ask_for_dir.return_value = pathlib.Path("path/to/dir/")
         self.controller.request_set_campaign_folder()
 
@@ -51,7 +56,8 @@ class TestIndexReload(TestCampaignSetup):
             "campaign_set_status", {"is_active": False}
         )
 
-    def test_reload_index_with_campaign_path(self):
+    @patch("app.controller.FileHandler.load_relations")
+    def test_reload_index_with_campaign_path(self, stub_load_relation):
         self.controller.register_campaign(pathlib.Path("path/to/dir/"))
         self.controller.request_reload_index()
 
@@ -84,8 +90,10 @@ class TestShowPeople(TestCampaignSetup):
 class TestCreateNewPerson(TestCampaignSetup):
     """tests for creating new person"""
 
+    @patch("app.controller.FileHandler.load_relations")
+    @patch("app.controller.create_chronicle_dir")
     @patch("app.database.FileDatabase")
-    def test_new_person(self, file_database: MagicMock):
+    def test_new_person(self, file_database: MagicMock, stub_dir, stub_load):
         data = {
             "name": "Salazar",
             "markdown": "",
@@ -115,8 +123,12 @@ class TestCreateNewPerson(TestCampaignSetup):
             {"people": [{"name": "Salazar", "id": "salazar"}]},
         )
 
+    @patch("app.controller.FileHandler.load_relations")
+    @patch("app.controller.create_chronicle_dir")
     @patch("app.database.FileDatabase")
-    def test_new_person_already_exists(self, file_database: MagicMock):
+    def test_new_person_already_exists(
+        self, file_database: MagicMock, stub_dir, stub_load
+    ):
         data = {
             "name": "Salazar",
             "markdown": "",
@@ -132,3 +144,60 @@ class TestCreateNewPerson(TestCampaignSetup):
         self.mock_interactor.add_person.return_value = None
 
         self.controller.request_create_person(data)
+
+
+class TestInitRelations(TestCampaignSetup):
+    """tests for relation initialization"""
+
+    @patch("app.domain.relations.get_relation_type_definitions")
+    def test_initial_relation_request(self, mock_get_defs: MagicMock):
+
+        self.mock_interactor.get_people.return_value = [
+            ppl.Person("Bobby", "bobby"),
+            ppl.Person("Alice", "alice"),
+        ]
+
+        self.mock_interactor.get_relations.return_value = [
+            rel.Relation("friend", "a2b", "alice", "bob")
+        ]
+
+        mock_get_defs.return_value = []
+
+        self.controller.request_initial_relations_data()
+
+        exp_vm = {
+            "config": {"relation_definitions": []},
+            "nodes": [
+                {
+                    "data": {
+                        "id": "bobby",
+                        "label": "Bobby",
+                        "type": "person",
+                        "href": "/person/bobby",
+                    }
+                },
+                {
+                    "data": {
+                        "id": "alice",
+                        "label": "Alice",
+                        "type": "person",
+                        "href": "/person/alice",
+                    }
+                },
+            ],
+            "edges": [
+                {
+                    "data": {
+                        "id": "a2b",
+                        "label": "befreundet",
+                        "type": "friend",
+                        "source": "alice",
+                        "target": "bob",
+                    }
+                }
+            ],
+        }
+
+        self.mock_gui.emit_dict.assert_called_once_with(
+            "initialized_relations", exp_vm
+        )

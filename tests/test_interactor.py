@@ -4,10 +4,12 @@ import unittest as ut
 import pathlib
 import app.interactor as iactr
 import app.domain.people as ppl
+import app.domain.relations as rel
 import app.database as db
 
 
 class TestGetPeople(ut.TestCase):
+    """test suite for people"""
 
     def setUp(self):
         self.interactor = iactr.Interactor()
@@ -60,3 +62,18 @@ class TestGetPeople(ut.TestCase):
     def test_fail_get_person(self):
         with self.assertRaises(iactr.InvalidPersonError):
             self.interactor.get_person("alice")
+
+
+class TestRelations(ut.TestCase):
+    """test suite for relations"""
+
+    def setUp(self):
+        self.interactor = iactr.Interactor()
+
+    def test_add_relation(self):
+        exp_relations = [rel.Relation("friend", "alice-2-bob", "alice", "bob")]
+        self.interactor.add_relation("alice", "bob", "friend")
+
+        act_relations = self.interactor.get_relations()
+
+        self.assertListEqual(exp_relations, act_relations)

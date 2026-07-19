@@ -54,6 +54,10 @@
   margin-bottom: 18px;
 }
 
+.modal-form-group.hidden {
+  display: none;
+}
+
 .modal-form-group label {
   font-size: 0.75rem;
   font-weight: 600;

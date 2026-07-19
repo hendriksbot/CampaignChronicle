@@ -289,7 +289,7 @@ class MardownEditor {
 
     const text = textarea.value.substring(start, end) || "Link text";
 
-    const markdown = `[${text}](https://)`;
+    const markdown = `[${text}](/)`;
 
     textarea.setRangeText(markdown, start, end, "select");
 

@@ -45,13 +45,19 @@ class FlaskGui(gui.Gui):
                 "index.html", app_version=_version.version
             )
 
+        @self._app.route("/relations")
+        def render_relations_page():
+            return flask.render_template(
+                "relations.html", app_version=_version.version
+            )
+
         @self._app.route("/people")
         def render_people_page():
             return flask.render_template(
                 "people.html", app_version=_version.version
             )
 
-        @self._app.route("/people/<person_id>")
+        @self._app.route("/person/<person_id>")
         def render_person_page(person_id):
             return flask.render_template(
                 "person.html", app_version=_version.version, person_id=person_id
@@ -69,6 +75,18 @@ class FlaskGui(gui.Gui):
         @self._socketio.on("request_reload_index")
         def request_reload_index():
             self._evh.request_reload_index()
+
+        @self._socketio.on("request_init_relations_data")
+        def request_initial_relations_data():
+            self._evh.request_initial_relations_data()
+
+        @self._socketio.on("request_create_relation")
+        def request_create_relation(data):
+            self._evh.request_create_relation(data)
+
+        @self._socketio.on("request_delete_relation")
+        def request_delete_relation(data):
+            self._evh.request_delete_relation(data["id"])
 
         @self._socketio.on("request_people_list")
         def request_people_list():
