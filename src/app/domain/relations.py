@@ -1,6 +1,12 @@
 """this moduls defines relations"""
 
 from dataclasses import dataclass, field
+from packaging.version import Version
+
+RELATION_VERSION = Version("0.1.0")
+"""
+    0.1.0 initial version
+"""
 
 
 @dataclass

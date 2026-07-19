@@ -36,6 +36,11 @@ class Interactor:
                 name=name, id=file.path.stem
             )
 
+    def register_relations(self, relations: list[rel.Relation]):
+        self._relations = {}
+        for relation in relations:
+            self._relations[relation.id] = relation
+
     def add_person(self, name: str) -> ppl.Person:
         person = ppl.Person(name=name, id=slugify(name))
         if person.id in self._people:

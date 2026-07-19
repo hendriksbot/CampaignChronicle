@@ -1,6 +1,9 @@
 """this module contains the controller logic of the app"""
 
 import pathlib
+import json
+from packaging.version import Version
+from dataclasses import asdict
 import app.ports.event_handler as evh_if
 import app.guis.gui
 import app.guis.file_gui as file_gui
@@ -25,12 +28,40 @@ class Controller(evh_if.EventHandlerInterface):
 
     def register_campaign(self, campaign_path: pathlib.Path):
         self._campaign_path = configs.CampaignPath(campaign_path)
+        self._campaign_path.chronicle().mkdir(parents=True, exist_ok=True)
         self._file_dbs = {
             "people": db.FileDatabase(self._campaign_path.people())
         }
         self._interactor.register_people(
             self._file_dbs["people"].register_files()
         )
+        self._interactor.register_relations(self._load_relations())
+
+    def _load_relations(self) -> list[rel.Relation]:
+        path = self._campaign_path.chronicle() / "relations.json"
+        with path.open("r", encoding="utf-8") as file:
+            data = json.load(file)
+
+        file_version = Version(data.get("__version", "0.0.0"))
+        if file_version.major != rel.RELATION_VERSION.major:
+            raise ValueError(
+                f"Unsupported relation format version "
+                f"{file_version}. "
+                f"Expected major version "
+                f"{rel.RELATION_VERSION.major}"
+            )
+
+        return [rel.Relation(**relation) for relation in data["relations"]]
+
+    def _save_relations(self, relations: list[rel.Relation]):
+        path = self._campaign_path.chronicle() / "relations.json"
+        data = {
+            "__version": str(rel.RELATION_VERSION),
+            "relations": [asdict(relation) for relation in relations],
+        }
+
+        with path.open("w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2, ensure_ascii=False)
 
     def request_reload_index(self):
         is_active = bool(self._campaign_path)
@@ -133,6 +164,7 @@ class Controller(evh_if.EventHandlerInterface):
             "nodes": nodes,
             "edges": self._create_edges_list(),
         }
+        self._save_relations(self._interactor.get_relations())
         self._gui.emit_dict("updated_relations", vm)
 
     def request_delete_relation(self, relation_id: str):
@@ -145,4 +177,5 @@ class Controller(evh_if.EventHandlerInterface):
             "nodes": nodes,
             "edges": self._create_edges_list(),
         }
+        self._save_relations(self._interactor.get_relations())
         self._gui.emit_dict("updated_relations", vm)
