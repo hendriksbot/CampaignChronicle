@@ -131,6 +131,7 @@ export class RelationshipGraph extends EventEmitter {
           content: "✏ Edit",
           select: (node) => {
             console.log("clicked edit");
+            window.location.href = node.data("href");
           },
         },
         {
