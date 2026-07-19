@@ -1,7 +1,7 @@
 """this module implements the gui using flask"""
 
 import flask
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import singledispatchmethod
 import flask_socketio
 import app.guis.gui as gui
@@ -16,6 +16,14 @@ class NavigationItemViewModel:
 
 
 @dataclass
+class IndexCardViewModel:
+    display_title: str
+    display_sub_title: str
+    endpoint: str
+    resource_name: str
+
+
+@dataclass
 class BasePageDefinition:
     """defines a page"""
 
@@ -23,6 +31,7 @@ class BasePageDefinition:
     template: str
     endpoint: str = ""
     route: str = ""
+    additional_data: dict = field(default_factory=dict)
 
     def __post_init__(self):
         if not self.endpoint:
@@ -64,7 +73,27 @@ class FlaskGui(gui.Gui):
             self._app, async_mode="threading"
         )
         self._pages = [
-            PageDefinition("index", "index.html", route="/"),
+            PageDefinition(
+                "index",
+                "index.html",
+                route="/",
+                additional_data={
+                    "index_section": [
+                        IndexCardViewModel(
+                            "📜 Ereignisse",
+                            "Was ist bisher geschehen?",
+                            "events",
+                            "event",
+                        ),
+                        IndexCardViewModel(
+                            "👥 Personen",
+                            "Was ist bekannt über die Charaktere?",
+                            "people",
+                            "person",
+                        ),
+                    ]
+                },
+            ),
             PageDefinition("relations", "relations.html"),
             PageDefinition("people", "people.html"),
             RessourcePageDefinition(
@@ -76,8 +105,8 @@ class FlaskGui(gui.Gui):
         self._ui_config = {
             "app_version": _version.version,
             "app_navigation": [
-                NavigationItemViewModel("Personen", "people"),
                 NavigationItemViewModel("Ereignisse", "events"),
+                NavigationItemViewModel("Personen", "people"),
             ],
         }
 
@@ -104,7 +133,9 @@ class FlaskGui(gui.Gui):
     def _(self, page: PageDefinition):
         @self._app.route(page.route, endpoint=page.endpoint)
         def render_page():
-            return flask.render_template(page.template, **self._ui_config)
+            return flask.render_template(
+                page.template, **page.additional_data, **self._ui_config
+            )
 
     @_register_page.register
     def _(self, page: RessourcePageDefinition):

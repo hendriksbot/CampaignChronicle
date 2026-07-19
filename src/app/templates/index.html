@@ -13,7 +13,7 @@
 </div>
 
 <section class="card requires-campaign disabled">
-  <h2>🔗 Beziehungen</h2>
+  <h1>🔗 Beziehungen</h1>
   <p>Wie sind Personen, Orte und Ereignisse verbunden?</p>
 
   <div class="network-preview">
@@ -33,18 +33,17 @@
     <a href="/relations" class="btn primary">Übersicht öffnen</a>
   </div>
 </section>
-
+{% for item in index_section %}
 <section class="card requires-campaign disabled">
-  <h2>👥 Personen</h2>
-  <p>Was ist bekannt über die Charaktere?</p>
+  <h1>{{ item.display_title }}</h1>
+  <p>{{ item.display_sub_title }}</p>
 
   <div class="actions">
-    <a href="/people" class="btn primary">Anzeigen</a>
-    <a class="btn" id="new-person-btn">Neu anlegen</a>
+    <a href="{{ url_for(item.endpoint) }}" class="btn primary">Anzeigen</a>
+    <a class="btn" id="new-{{ item.resource_name }}-btn">Neu anlegen</a>
   </div>
 </section>
-
-{% include "modals/new_person.html" %}
+{% endfor %} {% include "modals/new_person.html" %}
 <script type="module" src="{{ url_for('static', filename='js/pages/index.js') }}"></script>
 <script src="{{ url_for('static', filename='js/markdown_tab.js') }}"></script>
 
