@@ -14,30 +14,19 @@ import app.database as db
 import app.presenter as presenter
 
 
-class Controller(evh_if.EventHandlerInterface):
-    """the controller class coordinates the interactor, presenters and gui"""
+def create_chronicle_dir(path: pathlib.Path):
+    path.mkdir(parents=True, exist_ok=True)
 
-    def __init__(self, gui: app.guis.gui.Gui, interactor: iactr.Interactor):
-        self._gui = gui
-        self._interactor = interactor
-        self._presenter = presenter.Presenter()
-        self._campaign_path: configs.CampaignPath | None = None
 
-    def start_app(self, is_debug_mode: bool = False):
-        self._gui.run(is_debug_mode)
+class FileHandler:
+    """temp concept for better testability"""
 
-    def register_campaign(self, campaign_path: pathlib.Path):
-        self._campaign_path = configs.CampaignPath(campaign_path)
-        self._campaign_path.chronicle().mkdir(parents=True, exist_ok=True)
-        self._file_dbs = {
-            "people": db.FileDatabase(self._campaign_path.people())
-        }
-        self._interactor.register_people(
-            self._file_dbs["people"].register_files()
-        )
-        self._interactor.register_relations(self._load_relations())
+    _campaign_path: configs.CampaignPath | None = None
 
-    def _load_relations(self) -> list[rel.Relation]:
+    def bind_campaign_path(self, path: configs.CampaignPath):
+        self._campaign_path = path
+
+    def load_relations(self) -> list[rel.Relation]:
         path = self._campaign_path.chronicle() / "relations.json"
         with path.open("r", encoding="utf-8") as file:
             data = json.load(file)
@@ -53,7 +42,7 @@ class Controller(evh_if.EventHandlerInterface):
 
         return [rel.Relation(**relation) for relation in data["relations"]]
 
-    def _save_relations(self, relations: list[rel.Relation]):
+    def save_relations(self, relations: list[rel.Relation]):
         path = self._campaign_path.chronicle() / "relations.json"
         data = {
             "__version": str(rel.RELATION_VERSION),
@@ -62,6 +51,32 @@ class Controller(evh_if.EventHandlerInterface):
 
         with path.open("w", encoding="utf-8") as file:
             json.dump(data, file, indent=2, ensure_ascii=False)
+
+
+class Controller(evh_if.EventHandlerInterface):
+    """the controller class coordinates the interactor, presenters and gui"""
+
+    def __init__(self, gui: app.guis.gui.Gui, interactor: iactr.Interactor):
+        self._gui = gui
+        self._interactor = interactor
+        self._presenter = presenter.Presenter()
+        self._campaign_path: configs.CampaignPath | None = None
+        self._file_handler = FileHandler()
+
+    def start_app(self, is_debug_mode: bool = False):
+        self._gui.run(is_debug_mode)
+
+    def register_campaign(self, campaign_path: pathlib.Path):
+        self._campaign_path = configs.CampaignPath(campaign_path)
+        self._file_handler.bind_campaign_path(self._campaign_path)
+        create_chronicle_dir(self._campaign_path.chronicle())
+        self._file_dbs = {
+            "people": db.FileDatabase(self._campaign_path.people())
+        }
+        self._interactor.register_people(
+            self._file_dbs["people"].register_files()
+        )
+        self._interactor.register_relations(self._file_handler.load_relations())
 
     def request_reload_index(self):
         is_active = bool(self._campaign_path)
@@ -164,7 +179,7 @@ class Controller(evh_if.EventHandlerInterface):
             "nodes": nodes,
             "edges": self._create_edges_list(),
         }
-        self._save_relations(self._interactor.get_relations())
+        self._file_handler.save_relations(self._interactor.get_relations())
         self._gui.emit_dict("updated_relations", vm)
 
     def request_delete_relation(self, relation_id: str):
@@ -177,5 +192,5 @@ class Controller(evh_if.EventHandlerInterface):
             "nodes": nodes,
             "edges": self._create_edges_list(),
         }
-        self._save_relations(self._interactor.get_relations())
+        self._file_handler.save_relations(self._interactor.get_relations())
         self._gui.emit_dict("updated_relations", vm)

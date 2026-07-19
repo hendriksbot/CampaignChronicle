@@ -30,8 +30,12 @@ class TestSetCampaignFolder(TestCampaignSetup):
         mock_ask_for_dir.assert_called_once_with(title="Select folder...")
         self.mock_gui.emit_dict.assert_not_called()
 
+    @patch("app.controller.FileHandler.load_relations")
+    @patch("app.controller.create_chronicle_dir")
     @patch("app.guis.file_gui.DirectorySelectorGui.ask_for_directory")
-    def test_valid_dir(self, mock_ask_for_dir: Mock):
+    def test_valid_dir(
+        self, mock_ask_for_dir: Mock, stub_create_dir, stub_load_relation
+    ):
         mock_ask_for_dir.return_value = pathlib.Path("path/to/dir/")
         self.controller.request_set_campaign_folder()
 
@@ -52,7 +56,8 @@ class TestIndexReload(TestCampaignSetup):
             "campaign_set_status", {"is_active": False}
         )
 
-    def test_reload_index_with_campaign_path(self):
+    @patch("app.controller.FileHandler.load_relations")
+    def test_reload_index_with_campaign_path(self, stub_load_relation):
         self.controller.register_campaign(pathlib.Path("path/to/dir/"))
         self.controller.request_reload_index()
 
@@ -85,8 +90,10 @@ class TestShowPeople(TestCampaignSetup):
 class TestCreateNewPerson(TestCampaignSetup):
     """tests for creating new person"""
 
+    @patch("app.controller.FileHandler.load_relations")
+    @patch("app.controller.create_chronicle_dir")
     @patch("app.database.FileDatabase")
-    def test_new_person(self, file_database: MagicMock):
+    def test_new_person(self, file_database: MagicMock, stub_dir, stub_load):
         data = {
             "name": "Salazar",
             "markdown": "",
@@ -116,8 +123,12 @@ class TestCreateNewPerson(TestCampaignSetup):
             {"people": [{"name": "Salazar", "id": "salazar"}]},
         )
 
+    @patch("app.controller.FileHandler.load_relations")
+    @patch("app.controller.create_chronicle_dir")
     @patch("app.database.FileDatabase")
-    def test_new_person_already_exists(self, file_database: MagicMock):
+    def test_new_person_already_exists(
+        self, file_database: MagicMock, stub_dir, stub_load
+    ):
         data = {
             "name": "Salazar",
             "markdown": "",
