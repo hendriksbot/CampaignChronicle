@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block title %}{{ page_name }}{% endblock %} {% block head_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/object_overview.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
+{% endblock %} {% block content %}
+<div class="page-header">
+  <h1>{{ page_display_title }}</h1>
+  <button class="btn primary" id="new-object-btn">+ {{ new_obj_btn_display_name }}</button>
+</div>
+
+<div class="object-overview-grid" id="object-overview-container"></div>
+
+<!-- <script type="module" src="{{ url_for('static', filename='js/pages/people.js') }}"></script> -->
+{% endblock %}

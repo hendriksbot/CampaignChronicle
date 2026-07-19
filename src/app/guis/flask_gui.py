@@ -95,11 +95,27 @@ class FlaskGui(gui.Gui):
                 },
             ),
             PageDefinition("relations", "relations.html"),
-            PageDefinition("people", "people.html"),
+            PageDefinition(
+                "people",
+                "people.html",
+                additional_data={
+                    "page_name": "Personen",
+                    "page_display_title": "👥 Personen",
+                    "new_obj_btn_display_name": "Neue Person",
+                },
+            ),
             RessourcePageDefinition(
                 "person", "person.html", resource_name_str="person_id"
             ),
-            PageDefinition("events", "people.html"),
+            PageDefinition(
+                "events",
+                "object_overview.html",
+                additional_data={
+                    "page_name": "Ereignisse",
+                    "page_display_title": "📜 Ereignisse",
+                    "new_obj_btn_display_name": "Neues Ereignis",
+                },
+            ),
             RessourcePageDefinition("event", "person.html"),
         ]
         self._ui_config = {
