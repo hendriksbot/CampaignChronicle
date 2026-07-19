@@ -1,10 +1,49 @@
 """this module implements the gui using flask"""
 
 import flask
+from dataclasses import dataclass
+from functools import singledispatchmethod
 import flask_socketio
 import app.guis.gui as gui
 import app.utils.paths as paths
 import app._version as _version
+
+
+@dataclass
+class NavigationItemViewModel:
+    display_name: str
+    endpoint: str
+
+
+@dataclass
+class BasePageDefinition:
+    """defines a page"""
+
+    id: str
+    template: str
+    endpoint: str = ""
+    route: str = ""
+
+    def __post_init__(self):
+        if not self.endpoint:
+            self.endpoint = self.id
+        if not self.route:
+            self.route = f"/{self.id}"
+
+
+@dataclass
+class PageDefinition(BasePageDefinition):
+    pass
+
+
+@dataclass
+class RessourcePageDefinition(BasePageDefinition):
+    resource_name_str: str = "obj_id"
+
+    def __post_init__(self):
+        if not self.route:
+            self.route = f"/{self.id}/<{self.resource_name_str}>"
+        super().__post_init__()
 
 
 class FlaskGui(gui.Gui):
@@ -24,9 +63,28 @@ class FlaskGui(gui.Gui):
         self._socketio = flask_socketio.SocketIO(
             self._app, async_mode="threading"
         )
+        self._pages = [
+            PageDefinition("index", "index.html", route="/"),
+            PageDefinition("relations", "relations.html"),
+            PageDefinition("people", "people.html"),
+            RessourcePageDefinition(
+                "person", "person.html", resource_name_str="person_id"
+            ),
+            PageDefinition("events", "people.html"),
+            RessourcePageDefinition("event", "person.html"),
+        ]
+        self._ui_config = {
+            "app_version": _version.version,
+            "app_navigation": [
+                NavigationItemViewModel("Personen", "people"),
+                NavigationItemViewModel("Ereignisse", "events"),
+            ],
+        }
 
     def run(self, is_debug_mode):
         self._setup_routes()
+        for rule in self._app.url_map.iter_rules():
+            print(rule.endpoint, rule.rule)
         self._socketio.run(
             app=self._app,
             host="0.0.0.0",
@@ -38,30 +96,29 @@ class FlaskGui(gui.Gui):
     def emit_dict(self, event: str, data: dict):
         self._socketio.emit(event, data)
 
+    @singledispatchmethod
+    def _register_page(self, page):
+        raise NotImplementedError(f"{type(page)} is not implemented.")
+
+    @_register_page.register
+    def _(self, page: PageDefinition):
+        @self._app.route(page.route, endpoint=page.endpoint)
+        def render_page():
+            return flask.render_template(page.template, **self._ui_config)
+
+    @_register_page.register
+    def _(self, page: RessourcePageDefinition):
+        @self._app.route(page.route, endpoint=page.endpoint)
+        def render_page(**kwargs):
+            obj_id = kwargs[page.resource_name_str]
+            obj = {page.resource_name_str: obj_id}
+            return flask.render_template(
+                page.template, **obj, **self._ui_config
+            )
+
     def _setup_routes(self):
-        @self._app.route("/")
-        def render_index_page():
-            return flask.render_template(
-                "index.html", app_version=_version.version
-            )
-
-        @self._app.route("/relations")
-        def render_relations_page():
-            return flask.render_template(
-                "relations.html", app_version=_version.version
-            )
-
-        @self._app.route("/people")
-        def render_people_page():
-            return flask.render_template(
-                "people.html", app_version=_version.version
-            )
-
-        @self._app.route("/person/<person_id>")
-        def render_person_page(person_id):
-            return flask.render_template(
-                "person.html", app_version=_version.version, person_id=person_id
-            )
+        for page in self._pages:
+            self._register_page(page)
 
         @self._app.route("/api/render-markdown", methods=["POST"])
         def render_markdown():
