@@ -84,6 +84,10 @@ class FlaskGui(gui.Gui):
         def request_create_relation(data):
             self._evh.request_create_relation(data)
 
+        @self._socketio.on("request_delete_relation")
+        def request_delete_relation(data):
+            self._evh.request_delete_relation(data["id"])
+
         @self._socketio.on("request_people_list")
         def request_people_list():
             self._evh.request_people_list()

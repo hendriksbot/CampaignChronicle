@@ -9,6 +9,10 @@ graph.on("createRelation", ({ source, target }) => {
   relationModal.open(source, target, graph.relationshipDefinitions);
 });
 
+graph.on("deleteRelation", (data) => {
+  socket.emit("request_delete_relation", data);
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   socket.emit("request_init_relations_data");
 });

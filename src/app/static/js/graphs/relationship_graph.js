@@ -124,18 +124,18 @@ export class RelationshipGraph extends EventEmitter {
   }
 
   #createContextMenus() {
-    const options = {
+    const nodeOptions = {
       selector: "node",
       commands: [
         {
-          content: "✏ Edit",
+          content: "✏ Editieren",
           select: (node) => {
             console.log("clicked edit");
             window.location.href = node.data("href");
           },
         },
         {
-          content: "➕ Add Relationship",
+          content: "➕ Beziehung hinzufügen",
           select: (node) => {
             this.#startRelationSelection(node);
             console.log("clicked add relationsship");
@@ -143,7 +143,21 @@ export class RelationshipGraph extends EventEmitter {
         },
       ],
     };
-    this.#createContextMenu("node", options);
+    this.#createContextMenu("node", nodeOptions);
+
+    const edgeOptions = {
+      selector: "edge",
+      commands: [
+        {
+          content: "🗑 Beziehung löschen",
+          select: (edge) => {
+            console.log("clicked delete");
+            this.emit("deleteRelation", { id: edge.data("id") });
+          },
+        },
+      ],
+    };
+    this.#createContextMenu("edge", edgeOptions);
   }
 
   #onNodeTap(event) {
