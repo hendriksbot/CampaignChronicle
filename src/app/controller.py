@@ -134,3 +134,15 @@ class Controller(evh_if.EventHandlerInterface):
             "edges": self._create_edges_list(),
         }
         self._gui.emit_dict("updated_relations", vm)
+
+    def request_delete_relation(self, relation_id: str):
+        self._interactor.delete_relation(relation_id)
+        nodes = [
+            self._presenter.show_node(person)
+            for person in self._interactor.get_people()
+        ]
+        vm = {
+            "nodes": nodes,
+            "edges": self._create_edges_list(),
+        }
+        self._gui.emit_dict("updated_relations", vm)

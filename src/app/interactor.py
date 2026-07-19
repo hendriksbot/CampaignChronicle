@@ -57,5 +57,8 @@ class Interactor:
             rel_type, rel_id, source_id, target_id
         )
 
+    def delete_relation(self, relation_id: str):
+        self._relations.pop(relation_id)
+
     def get_relations(self):
         return list(self._relations.values())
