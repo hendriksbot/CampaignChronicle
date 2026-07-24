@@ -1,11 +1,11 @@
-.object-overview-grid {
+.chronicle-object-overview-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1rem;
 }
 
 /* Object Cards (Clickable) */
-.object-card {
+.chronicle-object-card {
   display: block;
   text-decoration: none;
   color: inherit;
@@ -21,7 +21,7 @@
     border 0.15s ease;
 }
 
-.object-card:hover {
+.chronicle-object-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
   border-color: var(--btn-primary-hover-color);
@@ -30,17 +30,17 @@
 }
 
 /* Name */
-.object-card h1 {
+.chronicle-object-card h1 {
   margin-bottom: 0.4rem;
   font-size: 1.1rem;
 }
 
-.object-card a:hover {
+.chronicle-object-card a:hover {
   color: var(--text-color);
 }
 
 /* Optional Meta Info */
-.object-meta {
+.chronicle-object-meta {
   font-size: 0.85rem;
   color: #bbb;
 }
