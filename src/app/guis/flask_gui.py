@@ -97,11 +97,13 @@ class FlaskGui(gui.Gui):
             PageDefinition("relations", "relations.html"),
             PageDefinition(
                 "people",
-                "people.html",
+                "chronicle_object_overview.html",
                 additional_data={
                     "page_name": "Personen",
                     "page_display_title": "👥 Personen",
                     "new_obj_btn_display_name": "Neue Person",
+                    "new_obj_name_example": "z.B. Gandalf der Graue",
+                    "resource_type": "person",
                 },
             ),
             RessourcePageDefinition(
@@ -109,11 +111,13 @@ class FlaskGui(gui.Gui):
             ),
             PageDefinition(
                 "events",
-                "object_overview.html",
+                "chronicle_object_overview.html",
                 additional_data={
                     "page_name": "Ereignisse",
                     "page_display_title": "📜 Ereignisse",
                     "new_obj_btn_display_name": "Neues Ereignis",
+                    "new_obj_name_example": "z.B. Die Schlacht um Helms Klamm",
+                    "resource_type": "event",
                 },
             ),
             RessourcePageDefinition("event", "person.html"),

@@ -1,0 +1,23 @@
+<div id="new-chronicle-object-modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{{ new_obj_btn_display_name }}</h2>
+      <button class="modal-close">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-form-group">
+        <label for="chronicle-object-name">Name</label>
+        <div class="modal-input-wrapper">
+          <input type="text" id="chronicle-object-name" placeholder="{{ new_obj_name_example }}" />
+          <div class="modal-input-error-message" id="chronicle-object-name-error"></div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn cancel-btn">Abbrechen</button>
+        <button class="btn primary save-btn">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
