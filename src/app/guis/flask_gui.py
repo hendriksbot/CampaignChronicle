@@ -20,7 +20,9 @@ class IndexCardViewModel:
     display_title: str
     display_sub_title: str
     endpoint: str
-    resource_name: str
+    resource_type: str
+    new_obj_btn_display_name: str
+    new_obj_name_example: str
 
 
 @dataclass
@@ -84,12 +86,16 @@ class FlaskGui(gui.Gui):
                             "Was ist bisher geschehen?",
                             "events",
                             "event",
+                            "Neues Ereignis",
+                            "z.B. Die Schlacht um Helms Klamm",
                         ),
                         IndexCardViewModel(
                             "👥 Personen",
                             "Was ist bekannt über die Charaktere?",
                             "people",
                             "person",
+                            "Neue Person",
+                            "z.B. Gandalf der Graue",
                         ),
                     ]
                 },
@@ -106,9 +112,7 @@ class FlaskGui(gui.Gui):
                     "resource_type": "person",
                 },
             ),
-            RessourcePageDefinition(
-                "person", "person.html", resource_name_str="person_id"
-            ),
+            RessourcePageDefinition("person", "chronicle_object.html"),
             PageDefinition(
                 "events",
                 "chronicle_object_overview.html",
@@ -120,7 +124,7 @@ class FlaskGui(gui.Gui):
                     "resource_type": "event",
                 },
             ),
-            RessourcePageDefinition("event", "person.html"),
+            RessourcePageDefinition("event", "chronicle_object.html"),
         ]
         self._ui_config = {
             "app_version": _version.version,
@@ -162,7 +166,7 @@ class FlaskGui(gui.Gui):
         @self._app.route(page.route, endpoint=page.endpoint)
         def render_page(**kwargs):
             obj_id = kwargs[page.resource_name_str]
-            obj = {page.resource_name_str: obj_id}
+            obj = {"resource_type": page.id, page.resource_name_str: obj_id}
             return flask.render_template(
                 page.template, **obj, **self._ui_config
             )
@@ -196,17 +200,17 @@ class FlaskGui(gui.Gui):
         def request_delete_relation(data):
             self._evh.request_delete_relation(data["id"])
 
-        @self._socketio.on("request_people_list")
-        def request_people_list():
-            self._evh.request_people_list()
+        @self._socketio.on("request_chronicle_object_overview_list")
+        def request_chronicle_object_list(data):
+            self._evh.request_chronicle_object_list(data)
 
-        @self._socketio.on("request_create_person")
-        def request_create_person(data):
-            self._evh.request_create_person(data)
+        @self._socketio.on("request_create_chronicle_object")
+        def request_create_chronicle_object(data):
+            self._evh.request_create_chronicle_object(data)
 
-        @self._socketio.on("request_person")
-        def request_person(data):
-            self._evh.request_person(data)
+        @self._socketio.on("request_chronicle_object")
+        def request_chronicle_object(data):
+            self._evh.request_chronicle_object(data)
 
         @self._socketio.on("save_markdown")
         def save_markdown(data):

@@ -35,8 +35,12 @@ function createObjectCard(chrObj) {
   return card;
 }
 
-const modal = new NewChronicleObjectModal(socket, resourceType);
+const modal = new NewChronicleObjectModal(socket);
 document.getElementById("new-chronicle-object-btn").addEventListener("click", () => {
   console.log("clicked card");
-  modal.open();
+  modal.open(
+    resourceType,
+    container.dataset.newObjBtnDisplayName,
+    container.dataset.newObjNameExample
+  );
 });

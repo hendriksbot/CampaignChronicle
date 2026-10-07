@@ -15,15 +15,15 @@ class EventHandlerInterface(ABC):
         pass
 
     @abstractmethod
-    def request_people_list(self):
+    def request_chronicle_object_list(self, data: dict):
         pass
 
     @abstractmethod
-    def request_create_person(self, data: dict):
+    def request_create_chronicle_object(self, data: dict):
         pass
 
     @abstractmethod
-    def request_person(self, data: dict):
+    def request_chronicle_object(self, data: dict):
         pass
 
     @abstractmethod

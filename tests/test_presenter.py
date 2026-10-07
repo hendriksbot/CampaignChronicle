@@ -2,9 +2,9 @@
 
 import unittest as ut
 import app.presenter as presenter
-import app.domain.people as ppl
+import app.domain.chronicle_objects as chrobj
 import app.domain.relations as rel
-import app.view_models.vm_people as vm_ppl
+import app.view_models.vm_chronicle_object as vm_chrobj
 
 
 class PresenterSetup(ut.TestCase):
@@ -13,17 +13,20 @@ class PresenterSetup(ut.TestCase):
         self.presenter = presenter.Presenter()
 
 
-class TestShowPerson(PresenterSetup):
-    """test for the view model of a person"""
+class TestShowChronicleObject(PresenterSetup):
+    """test for the view model of a chronicle object"""
 
     def test_show(self):
-        person = ppl.Person("Bob", "bob")
+        person = chrobj.ChronicleObject("Bob", "bob", "person")
         content = "# Bob\n Bob ist eine coole Socke."
-        exp_vm = vm_ppl.VMPerson(
-            "bob", "<h1>Bob</h1>\n<p>Bob ist eine coole Socke.</p>", content
+        exp_vm = vm_chrobj.VMChronicleObject(
+            "bob",
+            "person",
+            "<h1>Bob</h1>\n<p>Bob ist eine coole Socke.</p>",
+            content,
         )
 
-        act_vm = self.presenter.show_person(person, content)
+        act_vm = self.presenter.show_chronicle_object(person, content)
 
         self.assertEqual(exp_vm.markdown_rendered, act_vm.markdown_rendered)
         self.assertEqual(exp_vm, act_vm)
@@ -63,7 +66,7 @@ class TestViewModelNode(PresenterSetup):
             self.presenter.show_node(FakeType())
 
     def test_person(self):
-        person = ppl.Person("Bob", "bob")
+        person = chrobj.ChronicleObject("Bob", "bob", "person")
         exp_vm_node = {
             "data": {
                 "id": person.id,

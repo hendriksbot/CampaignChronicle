@@ -1,4 +1,4 @@
-import { NewPersonModal } from "../modals/new_person.js";
+import { NewChronicleObjectModal } from "../modals/new_chronicle_object.js";
 
 const socket = io();
 document.getElementById("set-path-btn").addEventListener("click", setPath);
@@ -29,7 +29,13 @@ socket.on("campaign_set_status", function (data) {
   }
 });
 
-const modal = new NewPersonModal(socket);
-document.getElementById("new-person-btn").addEventListener("click", () => {
-  modal.open();
+const modal = new NewChronicleObjectModal(socket);
+document.querySelectorAll(".new-chronicle-object-btn").forEach((button) => {
+  button.addEventListener("click", () => {
+    modal.open(
+      button.dataset.resourceType,
+      button.dataset.newObjBtnDisplayName,
+      button.dataset.newObjNameExample
+    );
+  });
 });

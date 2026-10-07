@@ -3,19 +3,20 @@
 import markdown as md
 from functools import singledispatchmethod
 
-import app.domain.people as ppl
+import app.domain.chronicle_objects as chrobj
 import app.domain.relations as rel
-import app.view_models.vm_people as vm_ppl
+import app.view_models.vm_chronicle_object as vm_chrobj
 
 
 class Presenter:
     """presenter class"""
 
-    def show_person(
-        self, person: ppl.Person, file_content: str
-    ) -> vm_ppl.VMPerson:
-        return vm_ppl.VMPerson(
-            id=person.id,
+    def show_chronicle_object(
+        self, obj: chrobj.ChronicleObject, file_content: str
+    ) -> vm_chrobj.VMChronicleObject:
+        return vm_chrobj.VMChronicleObject(
+            id=obj.id,
+            type=obj.type,
             markdown_rendered=self.render_markdown(file_content),
             markdown_raw=file_content,
         )
@@ -59,12 +60,12 @@ class Presenter:
         )
 
     @show_node.register
-    def _(self, arg: ppl.Person):
+    def _(self, arg: chrobj.ChronicleObject):
         return {
             "data": {
                 "id": arg.id,
                 "label": arg.name,
-                "type": "person",
-                "href": f"/person/{arg.id}",
+                "type": arg.type,
+                "href": f"/{arg.type}/{arg.id}",
             }
         }

@@ -1,17 +1,21 @@
 import { Modal } from "./modal.js";
 
 export class NewChronicleObjectModal {
-  constructor(socket, resourceType) {
+  constructor(socket) {
     this.root = document.getElementById("new-chronicle-object-modal");
-    this.resourceType = resourceType;
+    this.resourceType = "";
     this.nameInput = document.getElementById("chronicle-object-name");
     this.saveButton = this.root.querySelector(".save-btn");
+    this.title = document.getElementById("modal-header-title");
     this.socket = socket;
     this.modal = new Modal(this.root);
     this.setupEvents();
   }
 
-  open() {
+  open(resourceType, modalTitle, newObjectNameExample) {
+    this.resourceType = resourceType;
+    this.title.textContent = modalTitle;
+    this.nameInput.placeholder = newObjectNameExample;
     this.modal.open();
     this.#resetInputFields();
   }

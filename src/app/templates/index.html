@@ -40,10 +40,17 @@
 
   <div class="actions">
     <a href="{{ url_for(item.endpoint) }}" class="btn primary">Anzeigen</a>
-    <a class="btn" id="new-{{ item.resource_name }}-btn">Neu anlegen</a>
+    <a
+      class="btn new-chronicle-object-btn"
+      id="new-{{ item.resource_name }}-btn"
+      data-resource-type="{{ item.resource_type}}"
+      data-new-obj-btn-display-name="{{ item.new_obj_btn_display_name }}"
+      data-new-obj-name-example="{{ item.new_obj_name_example }}"
+      >{{ item.new_obj_btn_display_name }}</a
+    >
   </div>
 </section>
-{% endfor %} {% include "modals/new_person.html" %}
+{% endfor %} {% include "modals/new_chronicle_object.html" %}
 <script type="module" src="{{ url_for('static', filename='js/pages/index.js') }}"></script>
 <script src="{{ url_for('static', filename='js/markdown_tab.js') }}"></script>
 

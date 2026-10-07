@@ -71,10 +71,15 @@ class Controller(evh_if.EventHandlerInterface):
         self._file_handler.bind_campaign_path(self._campaign_path)
         create_chronicle_dir(self._campaign_path.chronicle())
         self._file_dbs = {
-            "people": db.FileDatabase(self._campaign_path.people())
+            "person": db.FileDatabase(self._campaign_path.object("people")),
+            "event": db.FileDatabase(self._campaign_path.object("events")),
         }
-        self._interactor.register_people(
-            self._file_dbs["people"].register_files()
+        self._interactor.register_chronicle_object_types(["person", "event"])
+        self._interactor.register_chronicle_objects(
+            "person", self._file_dbs["person"].register_files()
+        )
+        self._interactor.register_chronicle_objects(
+            "event", self._file_dbs["event"].register_files()
         )
         self._interactor.register_relations(self._file_handler.load_relations())
 
@@ -93,39 +98,49 @@ class Controller(evh_if.EventHandlerInterface):
         self.register_campaign(path)
         self._gui.emit_dict("campaign_set_status", {"is_active": True})
 
-    def request_people_list(self):
-        people_list = [
+    def request_chronicle_object_list(self, data):
+        resource_type = data["type"]
+        objects = [
             {"name": person.name, "id": person.id}
-            for person in self._interactor.get_people()
+            for person in self._interactor.get_chronicle_object_list(
+                resource_type
+            )
         ]
-        self._gui.emit_dict("updated_people_list", {"people": people_list})
+        self._gui.emit_dict(
+            "updated_chronicle_object_list",
+            {"resource_type": resource_type, "objects": objects},
+        )
 
-    def request_create_person(self, data: dict):
-        person = self._interactor.add_person(data["name"])
-        if not person:
+    def request_create_chronicle_object(self, data: dict):
+        obj = self._interactor.add_chronicle_object(data["type"], data["name"])
+        if not obj:
             return
-        file = db.MarkdownFile(person.id, content=f"# {person.name}\n")
-        if self._file_dbs["people"].exist_file(file):
+        file = db.MarkdownFile(obj.id, content=f"# {obj.name}\n")
+        if self._file_dbs[data["type"]].exist_file(file):
             return
         else:
-            self._file_dbs["people"].create_file(file)
+            self._file_dbs[data["type"]].create_file(file)
 
-        self.request_people_list()
+        self.request_chronicle_object_list({"type": data["type"]})
 
-    def request_person(self, data):
+    def request_chronicle_object(self, data):
         try:
-            person = self._interactor.get_person(data["id"])
-        except iactr.InvalidPersonError:
+            obj = self._interactor.get_chronicle_object(
+                data["type"], data["id"]
+            )
+        except iactr.InvalidChronicleObjectError:
             return
 
         try:
-            file = self._file_dbs["people"].get_file(person.id)
+            file = self._file_dbs[data["type"]].get_file(obj.id)
         except FileNotFoundError:
             return
 
-        vm = self._presenter.show_person(person, file_content=file.content)
+        vm = self._presenter.show_chronicle_object(
+            obj, file_content=file.content
+        )
 
-        self._gui.emit_dict("updated_person", vars(vm))
+        self._gui.emit_dict("updated_chronicle_object", vars(vm))
 
     def render_markdown(self, raw_markdown: str):
         return self._presenter.render_markdown(raw_markdown)
@@ -138,7 +153,7 @@ class Controller(evh_if.EventHandlerInterface):
 
         file.write(content)
 
-        self.request_person({"id": entity_id})
+        self.request_chronicle_object({"id": entity_id, "type": entity_type})
 
     def _create_edges_list(self) -> list:
         return [
@@ -155,7 +170,7 @@ class Controller(evh_if.EventHandlerInterface):
         }
 
     def request_initial_relations_data(self):
-        people_list = self._interactor.get_people()
+        people_list = self._interactor.get_chronicle_object_list("person")
 
         nodes = [self._presenter.show_node(person) for person in people_list]
         vm = {
