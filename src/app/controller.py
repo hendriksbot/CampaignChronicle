@@ -188,7 +188,7 @@ class Controller(evh_if.EventHandlerInterface):
         )
         nodes = [
             self._presenter.show_node(person)
-            for person in self._interactor.get_people()
+            for person in self._interactor.get_chronicle_object_list("person")
         ]
         vm = {
             "nodes": nodes,
@@ -201,7 +201,7 @@ class Controller(evh_if.EventHandlerInterface):
         self._interactor.delete_relation(relation_id)
         nodes = [
             self._presenter.show_node(person)
-            for person in self._interactor.get_people()
+            for person in self._interactor.get_chronicle_object_list("person")
         ]
         vm = {
             "nodes": nodes,
