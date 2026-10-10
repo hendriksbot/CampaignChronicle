@@ -79,14 +79,20 @@ class TestShowPeople(TestCampaignSetup):
 
     def test_one_person(self):
         self.mock_interactor.get_chronicle_object_list.return_value = [
-            chrobj.ChronicleObject("Bobby", "bobby", "person")
+            chrobj.ChronicleObject("Bobby", "person:bobby", "person")
         ]
         self.controller.request_chronicle_object_list({"type": "person"})
         self.mock_gui.emit_dict.assert_called_once_with(
             "updated_chronicle_object_list",
             {
                 "resource_type": "person",
-                "objects": [{"name": "Bobby", "id": "bobby"}],
+                "objects": [
+                    {
+                        "name": "Bobby",
+                        "id": "person:bobby",
+                        "href": "/person/bobby",
+                    }
+                ],
             },
         )
 
@@ -129,7 +135,13 @@ class TestCreateNewPerson(TestCampaignSetup):
             "updated_chronicle_object_list",
             {
                 "resource_type": "person",
-                "objects": [{"name": "Salazar", "id": "person:salazar"}],
+                "objects": [
+                    {
+                        "name": "Salazar",
+                        "id": "person:salazar",
+                        "href": "/person/salazar",
+                    }
+                ],
             },
         )
 
@@ -184,7 +196,7 @@ class TestInitRelations(TestCampaignSetup):
                         "id": "person:bobby",
                         "label": "Bobby",
                         "type": "person",
-                        "href": "/person/person:bobby",
+                        "href": "/person/bobby",
                     }
                 },
                 {
@@ -192,7 +204,7 @@ class TestInitRelations(TestCampaignSetup):
                         "id": "person:alice",
                         "label": "Alice",
                         "type": "person",
-                        "href": "/person/person:alice",
+                        "href": "/person/alice",
                     }
                 },
             ],

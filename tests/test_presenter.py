@@ -32,6 +32,34 @@ class TestShowChronicleObject(PresenterSetup):
         self.assertEqual(exp_vm, act_vm)
 
 
+class TestShowChronicleObjectOverviewList(PresenterSetup):
+    """test for the view model of a chronicle object overview list"""
+
+    def test_show(self):
+        obj_list = [
+            chrobj.ChronicleObject("Alice", "person:alice", "person"),
+            chrobj.ChronicleObject("Bob", "person:bob", "person"),
+        ]
+        act_vm = self.presenter.show_chronicle_object_overview_list(
+            "person", obj_list
+        )
+
+        self.assertDictEqual(
+            vars(act_vm),
+            {
+                "resource_type": "person",
+                "objects": [
+                    {
+                        "name": "Alice",
+                        "id": "person:alice",
+                        "href": "/person/alice",
+                    },
+                    {"name": "Bob", "id": "person:bob", "href": "/person/bob"},
+                ],
+            },
+        )
+
+
 class TestViewModelEdge(PresenterSetup):
     """test for view model of an edge"""
 
@@ -66,7 +94,7 @@ class TestViewModelNode(PresenterSetup):
             self.presenter.show_node(FakeType())
 
     def test_person(self):
-        person = chrobj.ChronicleObject("Bob", "bob", "person")
+        person = chrobj.ChronicleObject("Bob", "person:bob", "person")
         exp_vm_node = {
             "data": {
                 "id": person.id,

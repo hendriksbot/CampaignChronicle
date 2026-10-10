@@ -25,7 +25,7 @@ function renderObjectList(data) {
 function createObjectCard(chrObj) {
   const card = document.createElement("a");
   card.className = "chronicle-object-card";
-  card.href = "/" + resourceType + "/" + chrObj.id;
+  card.href = chrObj.href;
 
   const name = document.createElement("h1");
   name.textContent = chrObj.name;

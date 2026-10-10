@@ -165,7 +165,8 @@ class FlaskGui(gui.Gui):
     def _(self, page: RessourcePageDefinition):
         @self._app.route(page.route, endpoint=page.endpoint)
         def render_page(**kwargs):
-            obj_id = kwargs[page.resource_name_str]
+            # create id by <type>:<name>
+            obj_id = f"{page.id}:{kwargs[page.resource_name_str]}"
             obj = {"resource_type": page.id, page.resource_name_str: obj_id}
             return flask.render_template(
                 page.template, **obj, **self._ui_config

@@ -100,15 +100,13 @@ class Controller(evh_if.EventHandlerInterface):
 
     def request_chronicle_object_list(self, data):
         resource_type = data["type"]
-        objects = [
-            {"name": person.name, "id": person.id}
-            for person in self._interactor.get_chronicle_object_list(
-                resource_type
-            )
-        ]
+        vm = self._presenter.show_chronicle_object_overview_list(
+            resource_type,
+            self._interactor.get_chronicle_object_list(resource_type),
+        )
         self._gui.emit_dict(
             "updated_chronicle_object_list",
-            {"resource_type": resource_type, "objects": objects},
+            vars(vm),
         )
 
     def request_create_chronicle_object(self, data: dict):

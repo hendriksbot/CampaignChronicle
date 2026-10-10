@@ -21,6 +21,25 @@ class Presenter:
             markdown_raw=file_content,
         )
 
+    def _show_chronicle_obj_href(self, obj: chrobj.ChronicleObject) -> str:
+        return f"/{obj.type}/{obj.id.partition(":")[2]}"
+
+    def show_chronicle_object_overview_list(
+        self, resource_type: str, obj_list: list[chrobj.ChronicleObject]
+    ) -> vm_chrobj.VMChronicleObjectOverviewList:
+        vm_obj_list: list[vm_chrobj.ChronicleObjectOverviewItem] = []
+        for obj in obj_list:
+            vm_obj_list.append(
+                {
+                    "name": obj.name,
+                    "id": obj.id,
+                    "href": self._show_chronicle_obj_href(obj),
+                }
+            )
+        return vm_chrobj.VMChronicleObjectOverviewList(
+            resource_type, vm_obj_list
+        )
+
     def render_markdown(self, raw_str: str) -> str:
         return md.markdown(raw_str, extensions=["nl2br", "tables"])
 
@@ -66,6 +85,6 @@ class Presenter:
                 "id": arg.id,
                 "label": arg.name,
                 "type": arg.type,
-                "href": f"/{arg.type}/{arg.id}",
+                "href": self._show_chronicle_obj_href(arg),
             }
         }
