@@ -48,8 +48,9 @@ class Interactor:
                 if lines and lines[0].startswith("# ")
                 else file.path.stem
             )
-            self._chr_objs[obj_type][file.path.stem] = chrobj.ChronicleObject(
-                name=name, id=file.path.stem, type=obj_type
+            obj_id = f"{obj_type}:{file.path.stem}"
+            self._chr_objs[obj_type][obj_id] = chrobj.ChronicleObject(
+                name=name, id=obj_id, type=obj_type
             )
 
     def register_relations(self, relations: list[rel.Relation]):
@@ -58,7 +59,9 @@ class Interactor:
             self._relations[relation.id] = relation
 
     def add_chronicle_object(self, obj_type: str, name: str):
-        obj = chrobj.ChronicleObject(name=name, id=slugify(name), type=obj_type)
+        obj = chrobj.ChronicleObject(
+            name=name, id=f"{obj_type}:{slugify(name)}", type=obj_type
+        )
         if obj.id in self._chr_objs[obj_type]:
             return None
         self._chr_objs[obj_type][obj.id] = obj

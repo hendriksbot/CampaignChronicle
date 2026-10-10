@@ -31,15 +31,15 @@ class TestGetPeople(ut.TestCase):
 
         self.assertListEqual(
             [
-                chrobj.ChronicleObject("Alice", "alice", "person"),
-                chrobj.ChronicleObject("Bob", "bob", "person"),
+                chrobj.ChronicleObject("Alice", "person:alice", "person"),
+                chrobj.ChronicleObject("Bob", "person:bob", "person"),
             ],
             people_list,
         )
 
         self.assertEqual(
-            chrobj.ChronicleObject("Alice", "alice", "person"),
-            self.interactor.get_chronicle_object("person", "alice"),
+            chrobj.ChronicleObject("Alice", "person:alice", "person"),
+            self.interactor.get_chronicle_object("person", "person:alice"),
         )
 
     def test_re_register_people(self):
@@ -61,15 +61,15 @@ class TestGetPeople(ut.TestCase):
 
         self.assertListEqual(
             [
-                chrobj.ChronicleObject("Carla", "carla", "person"),
-                chrobj.ChronicleObject("Dave", "dave", "person"),
+                chrobj.ChronicleObject("Carla", "person:carla", "person"),
+                chrobj.ChronicleObject("Dave", "person:dave", "person"),
             ],
             people_list,
         )
 
     def test_fail_get_person(self):
         with self.assertRaises(iactr.InvalidChronicleObjectError):
-            self.interactor.get_chronicle_object("person", "alice")
+            self.interactor.get_chronicle_object("person", "person:alice")
 
 
 class TestRelations(ut.TestCase):

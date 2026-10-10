@@ -112,10 +112,10 @@ class TestCreateNewPerson(TestCampaignSetup):
         campaign_path.__truediv__.return_value = people_path
         self.controller.register_campaign(campaign_path)
         self.mock_interactor.add_chronicle_object.return_value = (
-            chrobj.ChronicleObject("Salazar", "salazar", "person")
+            chrobj.ChronicleObject("Salazar", "person:salazar", "person")
         )
         self.mock_interactor.get_chronicle_object_list.return_value = [
-            chrobj.ChronicleObject("Salazar", "salazar", "person")
+            chrobj.ChronicleObject("Salazar", "person:salazar", "person")
         ]
         people_db.exist_file.return_value = False
         self.controller.request_create_chronicle_object(data)
@@ -127,7 +127,7 @@ class TestCreateNewPerson(TestCampaignSetup):
             "updated_chronicle_object_list",
             {
                 "resource_type": "person",
-                "objects": [{"name": "Salazar", "id": "salazar"}],
+                "objects": [{"name": "Salazar", "id": "person:salazar"}],
             },
         )
 
@@ -150,7 +150,7 @@ class TestCreateNewPerson(TestCampaignSetup):
         campaign_path = MagicMock()
         campaign_path.__truediv__.return_value = people_path
         self.controller.register_campaign(campaign_path)
-        self.mock_interactor.add_person.return_value = None
+        self.mock_interactor.add_chronicle_object.return_value = None
 
         self.controller.request_create_chronicle_object(data)
 
@@ -162,12 +162,12 @@ class TestInitRelations(TestCampaignSetup):
     def test_initial_relation_request(self, mock_get_defs: MagicMock):
 
         self.mock_interactor.get_chronicle_object_list.return_value = [
-            chrobj.ChronicleObject("Bobby", "bobby", "person"),
-            chrobj.ChronicleObject("Alice", "alice", "person"),
+            chrobj.ChronicleObject("Bobby", "person:bobby", "person"),
+            chrobj.ChronicleObject("Alice", "person:alice", "person"),
         ]
 
         self.mock_interactor.get_relations.return_value = [
-            rel.Relation("friend", "a2b", "alice", "bob")
+            rel.Relation("friend", "a2b", "person:alice", "person:bob")
         ]
 
         mock_get_defs.return_value = []
@@ -179,18 +179,18 @@ class TestInitRelations(TestCampaignSetup):
             "nodes": [
                 {
                     "data": {
-                        "id": "bobby",
+                        "id": "person:bobby",
                         "label": "Bobby",
                         "type": "person",
-                        "href": "/person/bobby",
+                        "href": "/person/person:bobby",
                     }
                 },
                 {
                     "data": {
-                        "id": "alice",
+                        "id": "person:alice",
                         "label": "Alice",
                         "type": "person",
-                        "href": "/person/alice",
+                        "href": "/person/person:alice",
                     }
                 },
             ],
@@ -200,8 +200,8 @@ class TestInitRelations(TestCampaignSetup):
                         "id": "a2b",
                         "label": "befreundet",
                         "type": "friend",
-                        "source": "alice",
-                        "target": "bob",
+                        "source": "person:alice",
+                        "target": "person:bob",
                     }
                 }
             ],

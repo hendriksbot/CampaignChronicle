@@ -115,7 +115,9 @@ class Controller(evh_if.EventHandlerInterface):
         obj = self._interactor.add_chronicle_object(data["type"], data["name"])
         if not obj:
             return
-        file = db.MarkdownFile(obj.id, content=f"# {obj.name}\n")
+        file = db.MarkdownFile(
+            obj.id.partition(":")[2], content=f"# {obj.name}\n"
+        )
         if self._file_dbs[data["type"]].exist_file(file):
             return
         else:
@@ -132,7 +134,9 @@ class Controller(evh_if.EventHandlerInterface):
             return
 
         try:
-            file = self._file_dbs[data["type"]].get_file(obj.id)
+            file = self._file_dbs[data["type"]].get_file(
+                obj.id.partition(":")[2]
+            )
         except FileNotFoundError:
             return
 
