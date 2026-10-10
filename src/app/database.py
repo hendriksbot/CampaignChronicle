@@ -1,18 +1,32 @@
 """module for the app databases"""
 
 import pathlib
+import frontmatter
 from dataclasses import dataclass
 
 
 @dataclass
+class MarkdownMeta:
+    id: str | None
+
+
+@dataclass
 class MarkdownFile:
+    """represents a markdown file which is used to store the database content"""
+
     name: str
+    meta: MarkdownMeta
     content: str = ""
     path: pathlib.Path | None = None
 
-    def write(self, content: str):
+    def write(self, content: str = ""):
+        if not content:
+            content = self.content
         if self.path:
-            self.path.write_text(data=content, encoding="utf-8")
+            document = frontmatter.Post(content=content, **vars(self.meta))
+            self.path.write_text(
+                data=frontmatter.dumps(document), encoding="utf-8"
+            )
 
 
 class FileDatabase:
@@ -25,13 +39,7 @@ class FileDatabase:
         files = self._path_to_src.glob("*.md")
         registered_files = []
         for file in files:
-            registered_files.append(
-                MarkdownFile(
-                    name=file.stem,
-                    path=file,
-                    content=file.read_text(encoding="utf-8"),
-                )
-            )
+            registered_files.append(load_markdown(file))
 
         return registered_files
 
@@ -41,10 +49,18 @@ class FileDatabase:
 
     def get_file(self, name: str) -> MarkdownFile:
         file = self._path_to_src / f"{name}.md"
-        return MarkdownFile(
-            name=file.stem, path=file, content=file.read_text(encoding="utf-8")
-        )
+        return load_markdown(file)
 
     def create_file(self, file: MarkdownFile):
-        file_path = self._path_to_src / f"{file.name}.md"
-        file_path.write_text(data=file.content, encoding="utf-8")
+        file.path = self._path_to_src / f"{file.name}.md"
+        file.write()
+
+
+def load_markdown(file: pathlib.Path) -> MarkdownFile:
+    document = frontmatter.loads(file.read_text(encoding="utf-8"))
+    return MarkdownFile(
+        name=file.stem,
+        path=file,
+        meta=MarkdownMeta(id=document.get("id", None)),
+        content=document.content,
+    )

@@ -18,10 +18,14 @@ class TestGetPeople(ut.TestCase):
     def test_register_people_two_persons(self):
         db_people_list = [
             db.MarkdownFile(
-                "alice", "# Alice", pathlib.Path("path/to/alice.md")
+                "alice",
+                db.MarkdownMeta(id="person:alice"),
+                "# Alice",
+                pathlib.Path("path/to/alice.md"),
             ),
             db.MarkdownFile(
                 "bob",
+                db.MarkdownMeta(id="person:bob"),
                 "# Bob",
                 pathlib.Path("path/to/bob.md"),
             ),
@@ -45,15 +49,31 @@ class TestGetPeople(ut.TestCase):
     def test_re_register_people(self):
         db_people_list_a = [
             db.MarkdownFile(
-                "alice", "# Alice", pathlib.Path("path/to/alice.md")
+                "alice",
+                db.MarkdownMeta(id="person:alice"),
+                "# Alice",
+                pathlib.Path("path/to/alice.md"),
             ),
-            db.MarkdownFile("bob", "# Bob", pathlib.Path("path/to/bob.md")),
+            db.MarkdownFile(
+                "bob",
+                db.MarkdownMeta(id="person:bob"),
+                "# Bob",
+                pathlib.Path("path/to/bob.md"),
+            ),
         ]
         db_people_list_b = [
             db.MarkdownFile(
-                "carla", "# Carla", pathlib.Path("path/to/carla.md")
+                "carla",
+                db.MarkdownMeta(id="person:carla"),
+                "# Carla",
+                pathlib.Path("path/to/carla.md"),
             ),
-            db.MarkdownFile("dave", "# Dave", pathlib.Path("path/to/dave.md")),
+            db.MarkdownFile(
+                "dave",
+                db.MarkdownMeta(id="person:dave"),
+                "# Dave",
+                pathlib.Path("path/to/dave.md"),
+            ),
         ]
         self.interactor.register_chronicle_objects("person", db_people_list_a)
         self.interactor.register_chronicle_objects("person", db_people_list_b)

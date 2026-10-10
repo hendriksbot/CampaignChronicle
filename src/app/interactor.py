@@ -48,10 +48,19 @@ class Interactor:
                 if lines and lines[0].startswith("# ")
                 else file.path.stem
             )
-            obj_id = f"{obj_type}:{file.path.stem}"
+            if file.meta.id:
+                obj_id = file.meta.id
+            else:
+                obj_id = f"{obj_type}:{file.path.stem}"
+                self._update_id_of_markdown(file, obj_id)
+
             self._chr_objs[obj_type][obj_id] = chrobj.ChronicleObject(
                 name=name, id=obj_id, type=obj_type
             )
+
+    def _update_id_of_markdown(self, file: db.MarkdownFile, obj_id: str):
+        file.meta.id = obj_id
+        file.write()
 
     def register_relations(self, relations: list[rel.Relation]):
         self._relations = {}

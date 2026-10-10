@@ -120,7 +120,9 @@ class TestCreateNewPerson(TestCampaignSetup):
         people_db.exist_file.return_value = False
         self.controller.request_create_chronicle_object(data)
         people_db.create_file.assert_called_once_with(
-            db.MarkdownFile("salazar", "# Salazar\n")
+            db.MarkdownFile(
+                "salazar", db.MarkdownMeta(id="person:salazar"), "# Salazar\n"
+            )
         )
 
         self.mock_gui.emit_dict.assert_called_once_with(

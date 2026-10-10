@@ -4,6 +4,7 @@ import unittest as ut
 from unittest.mock import MagicMock
 import pathlib
 import tempfile
+import frontmatter
 import app.database as db
 
 
@@ -40,12 +41,15 @@ class TestFileDatabase(ut.TestCase):
         db_path = MagicMock()
         db_path.__truediv__.return_value = file_path
         file_db = db.FileDatabase(db_path)
-        file = db.MarkdownFile(name="salazar")
+        file = db.MarkdownFile(
+            name="salazar", meta=db.MarkdownMeta(id="person:salazar")
+        )
         self.assertFalse(file_db.exist_file(file))
 
+        exp_document = frontmatter.Post("", id="person:salazar")
         file_db.create_file(file)
         file_path.write_text.assert_called_once_with(
-            data=file.content, encoding="utf-8"
+            data=frontmatter.dumps(exp_document), encoding="utf-8"
         )
 
     def test_create_new_file_exists(self):
@@ -54,20 +58,27 @@ class TestFileDatabase(ut.TestCase):
         db_path = MagicMock()
         db_path.__truediv__.return_value = file_path
         file_db = db.FileDatabase(db_path)
-        file = db.MarkdownFile(name="salazar")
+        file = db.MarkdownFile(
+            name="salazar", meta=db.MarkdownMeta(id="person:salazar")
+        )
         self.assertTrue(file_db.exist_file(file))
 
     def test_get_file(self):
         with tempfile.TemporaryDirectory() as tmp:
             db_path = pathlib.Path(tmp)
             file_db = db.FileDatabase(db_path)
-
-            (db_path / "alice.md").write_text("# Alice")
+            document = frontmatter.Post(content="# Alice", id="person:alice")
+            (db_path / "alice.md").write_text(frontmatter.dumps(document))
 
             act_file = file_db.get_file("alice")
 
             self.assertEqual(
-                db.MarkdownFile("alice", "# Alice", db_path / "alice.md"),
+                db.MarkdownFile(
+                    "alice",
+                    db.MarkdownMeta(id="person:alice"),
+                    "# Alice",
+                    db_path / "alice.md",
+                ),
                 act_file,
             )
 

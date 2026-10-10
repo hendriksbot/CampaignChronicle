@@ -116,7 +116,9 @@ class Controller(evh_if.EventHandlerInterface):
         if not obj:
             return
         file = db.MarkdownFile(
-            obj.id.partition(":")[2], content=f"# {obj.name}\n"
+            obj.id.partition(":")[2],
+            meta=db.MarkdownMeta(id=obj.id),
+            content=f"# {obj.name}\n",
         )
         if self._file_dbs[data["type"]].exist_file(file):
             return
