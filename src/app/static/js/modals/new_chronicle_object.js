@@ -1,16 +1,21 @@
 import { Modal } from "./modal.js";
 
-export class NewPersonModal {
+export class NewChronicleObjectModal {
   constructor(socket) {
-    this.root = document.getElementById("person-modal");
-    this.nameInput = document.getElementById("person-name");
+    this.root = document.getElementById("new-chronicle-object-modal");
+    this.resourceType = "";
+    this.nameInput = document.getElementById("chronicle-object-name");
     this.saveButton = this.root.querySelector(".save-btn");
+    this.title = document.getElementById("modal-header-title");
     this.socket = socket;
     this.modal = new Modal(this.root);
     this.setupEvents();
   }
 
-  open() {
+  open(resourceType, modalTitle, newObjectNameExample) {
+    this.resourceType = resourceType;
+    this.title.textContent = modalTitle;
+    this.nameInput.placeholder = newObjectNameExample;
     this.modal.open();
     this.#resetInputFields();
   }
@@ -57,8 +62,9 @@ export class NewPersonModal {
     if (!this.#isValidInput()) {
       return;
     }
-    this.socket.emit("request_create_person", {
+    this.socket.emit("request_create_chronicle_object", {
       name: this.nameInput.value,
+      type: this.resourceType,
       markdown: "",
     });
     this.close();

@@ -3,21 +3,41 @@
 import markdown as md
 from functools import singledispatchmethod
 
-import app.domain.people as ppl
+import app.domain.chronicle_objects as chrobj
 import app.domain.relations as rel
-import app.view_models.vm_people as vm_ppl
+import app.view_models.vm_chronicle_object as vm_chrobj
 
 
 class Presenter:
     """presenter class"""
 
-    def show_person(
-        self, person: ppl.Person, file_content: str
-    ) -> vm_ppl.VMPerson:
-        return vm_ppl.VMPerson(
-            id=person.id,
+    def show_chronicle_object(
+        self, obj: chrobj.ChronicleObject, file_content: str
+    ) -> vm_chrobj.VMChronicleObject:
+        return vm_chrobj.VMChronicleObject(
+            id=obj.id,
+            type=obj.type,
             markdown_rendered=self.render_markdown(file_content),
             markdown_raw=file_content,
+        )
+
+    def _show_chronicle_obj_href(self, obj: chrobj.ChronicleObject) -> str:
+        return f"/{obj.type}/{obj.id.partition(":")[2]}"
+
+    def show_chronicle_object_overview_list(
+        self, resource_type: str, obj_list: list[chrobj.ChronicleObject]
+    ) -> vm_chrobj.VMChronicleObjectOverviewList:
+        vm_obj_list: list[vm_chrobj.ChronicleObjectOverviewItem] = []
+        for obj in obj_list:
+            vm_obj_list.append(
+                {
+                    "name": obj.name,
+                    "id": obj.id,
+                    "href": self._show_chronicle_obj_href(obj),
+                }
+            )
+        return vm_chrobj.VMChronicleObjectOverviewList(
+            resource_type, vm_obj_list
         )
 
     def render_markdown(self, raw_str: str) -> str:
@@ -59,12 +79,12 @@ class Presenter:
         )
 
     @show_node.register
-    def _(self, arg: ppl.Person):
+    def _(self, arg: chrobj.ChronicleObject):
         return {
             "data": {
                 "id": arg.id,
                 "label": arg.name,
-                "type": "person",
-                "href": f"/person/{arg.id}",
+                "type": arg.type,
+                "href": self._show_chronicle_obj_href(arg),
             }
         }

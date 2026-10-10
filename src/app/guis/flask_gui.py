@@ -1,10 +1,60 @@
 """this module implements the gui using flask"""
 
 import flask
+from dataclasses import dataclass, field
+from functools import singledispatchmethod
 import flask_socketio
 import app.guis.gui as gui
 import app.utils.paths as paths
 import app._version as _version
+
+
+@dataclass
+class NavigationItemViewModel:
+    display_name: str
+    endpoint: str
+
+
+@dataclass
+class IndexCardViewModel:
+    display_title: str
+    display_sub_title: str
+    endpoint: str
+    resource_type: str
+    new_obj_btn_display_name: str
+    new_obj_name_example: str
+
+
+@dataclass
+class BasePageDefinition:
+    """defines a page"""
+
+    id: str
+    template: str
+    endpoint: str = ""
+    route: str = ""
+    additional_data: dict = field(default_factory=dict)
+
+    def __post_init__(self):
+        if not self.endpoint:
+            self.endpoint = self.id
+        if not self.route:
+            self.route = f"/{self.id}"
+
+
+@dataclass
+class PageDefinition(BasePageDefinition):
+    pass
+
+
+@dataclass
+class RessourcePageDefinition(BasePageDefinition):
+    resource_name_str: str = "obj_id"
+
+    def __post_init__(self):
+        if not self.route:
+            self.route = f"/{self.id}/<{self.resource_name_str}>"
+        super().__post_init__()
 
 
 class FlaskGui(gui.Gui):
@@ -24,9 +74,70 @@ class FlaskGui(gui.Gui):
         self._socketio = flask_socketio.SocketIO(
             self._app, async_mode="threading"
         )
+        self._pages = [
+            PageDefinition(
+                "index",
+                "index.html",
+                route="/",
+                additional_data={
+                    "index_section": [
+                        IndexCardViewModel(
+                            "📜 Ereignisse",
+                            "Was ist bisher geschehen?",
+                            "events",
+                            "event",
+                            "Neues Ereignis",
+                            "z.B. Die Schlacht um Helms Klamm",
+                        ),
+                        IndexCardViewModel(
+                            "👥 Personen",
+                            "Was ist bekannt über die Charaktere?",
+                            "people",
+                            "person",
+                            "Neue Person",
+                            "z.B. Gandalf der Graue",
+                        ),
+                    ]
+                },
+            ),
+            PageDefinition("relations", "relations.html"),
+            PageDefinition(
+                "people",
+                "chronicle_object_overview.html",
+                additional_data={
+                    "page_name": "Personen",
+                    "page_display_title": "👥 Personen",
+                    "new_obj_btn_display_name": "Neue Person",
+                    "new_obj_name_example": "z.B. Gandalf der Graue",
+                    "resource_type": "person",
+                },
+            ),
+            RessourcePageDefinition("person", "chronicle_object.html"),
+            PageDefinition(
+                "events",
+                "chronicle_object_overview.html",
+                additional_data={
+                    "page_name": "Ereignisse",
+                    "page_display_title": "📜 Ereignisse",
+                    "new_obj_btn_display_name": "Neues Ereignis",
+                    "new_obj_name_example": "z.B. Die Schlacht um Helms Klamm",
+                    "resource_type": "event",
+                },
+            ),
+            RessourcePageDefinition("event", "chronicle_object.html"),
+        ]
+        self._ui_config = {
+            "app_version": _version.version,
+            "app_navigation": [
+                NavigationItemViewModel("Ereignisse", "events"),
+                NavigationItemViewModel("Personen", "people"),
+            ],
+        }
 
     def run(self, is_debug_mode):
         self._setup_routes()
+        for rule in self._app.url_map.iter_rules():
+            print(rule.endpoint, rule.rule)
         self._socketio.run(
             app=self._app,
             host="0.0.0.0",
@@ -38,30 +149,32 @@ class FlaskGui(gui.Gui):
     def emit_dict(self, event: str, data: dict):
         self._socketio.emit(event, data)
 
+    @singledispatchmethod
+    def _register_page(self, page):
+        raise NotImplementedError(f"{type(page)} is not implemented.")
+
+    @_register_page.register
+    def _(self, page: PageDefinition):
+        @self._app.route(page.route, endpoint=page.endpoint)
+        def render_page():
+            return flask.render_template(
+                page.template, **page.additional_data, **self._ui_config
+            )
+
+    @_register_page.register
+    def _(self, page: RessourcePageDefinition):
+        @self._app.route(page.route, endpoint=page.endpoint)
+        def render_page(**kwargs):
+            # create id by <type>:<name>
+            obj_id = f"{page.id}:{kwargs[page.resource_name_str]}"
+            obj = {"resource_type": page.id, page.resource_name_str: obj_id}
+            return flask.render_template(
+                page.template, **obj, **self._ui_config
+            )
+
     def _setup_routes(self):
-        @self._app.route("/")
-        def render_index_page():
-            return flask.render_template(
-                "index.html", app_version=_version.version
-            )
-
-        @self._app.route("/relations")
-        def render_relations_page():
-            return flask.render_template(
-                "relations.html", app_version=_version.version
-            )
-
-        @self._app.route("/people")
-        def render_people_page():
-            return flask.render_template(
-                "people.html", app_version=_version.version
-            )
-
-        @self._app.route("/person/<person_id>")
-        def render_person_page(person_id):
-            return flask.render_template(
-                "person.html", app_version=_version.version, person_id=person_id
-            )
+        for page in self._pages:
+            self._register_page(page)
 
         @self._app.route("/api/render-markdown", methods=["POST"])
         def render_markdown():
@@ -88,17 +201,17 @@ class FlaskGui(gui.Gui):
         def request_delete_relation(data):
             self._evh.request_delete_relation(data["id"])
 
-        @self._socketio.on("request_people_list")
-        def request_people_list():
-            self._evh.request_people_list()
+        @self._socketio.on("request_chronicle_object_overview_list")
+        def request_chronicle_object_list(data):
+            self._evh.request_chronicle_object_list(data)
 
-        @self._socketio.on("request_create_person")
-        def request_create_person(data):
-            self._evh.request_create_person(data)
+        @self._socketio.on("request_create_chronicle_object")
+        def request_create_chronicle_object(data):
+            self._evh.request_create_chronicle_object(data)
 
-        @self._socketio.on("request_person")
-        def request_person(data):
-            self._evh.request_person(data)
+        @self._socketio.on("request_chronicle_object")
+        def request_chronicle_object(data):
+            self._evh.request_chronicle_object(data)
 
         @self._socketio.on("save_markdown")
         def save_markdown(data):

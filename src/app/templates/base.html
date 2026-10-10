@@ -26,7 +26,15 @@
         <a href="/relations" class="nav-link nav-requires-campaign" id="nav-relations"
           >Beziehungen</a
         >
-        <a href="/people" class="nav-link nav-requires-campaign" id="nav-people">Personen</a>
+        {% for item in app_navigation %}
+        <a
+          href="{{ url_for(item.endpoint) }}"
+          class="nav-link nav-requires-campaign"
+          id="nav-{{ item.endpoint }}"
+        >
+          {{ item.display_name }}
+        </a>
+        {% endfor %}
       </div>
 
       <div class="nav-right">

@@ -5,7 +5,7 @@ from unittest.mock import Mock, MagicMock, patch
 import pathlib
 import app.controller as ctr
 import app.guis.file_gui as file_gui
-import app.domain.people as ppl
+import app.domain.chronicle_objects as chrobj
 import app.domain.relations as rel
 import app.database as db
 
@@ -70,20 +70,30 @@ class TestShowPeople(TestCampaignSetup):
     """tests to show people"""
 
     def test_no_people(self):
-        self.mock_interactor.get_people.return_value = []
-        self.controller.request_people_list()
+        self.mock_interactor.get_chronicle_object_list.return_value = []
+        self.controller.request_chronicle_object_list({"type": "person"})
         self.mock_gui.emit_dict.assert_called_once_with(
-            "updated_people_list", {"people": []}
+            "updated_chronicle_object_list",
+            {"resource_type": "person", "objects": []},
         )
 
     def test_one_person(self):
-        self.mock_interactor.get_people.return_value = [
-            ppl.Person("Bobby", "bobby")
+        self.mock_interactor.get_chronicle_object_list.return_value = [
+            chrobj.ChronicleObject("Bobby", "person:bobby", "person")
         ]
-        self.controller.request_people_list()
+        self.controller.request_chronicle_object_list({"type": "person"})
         self.mock_gui.emit_dict.assert_called_once_with(
-            "updated_people_list",
-            {"people": [{"name": "Bobby", "id": "bobby"}]},
+            "updated_chronicle_object_list",
+            {
+                "resource_type": "person",
+                "objects": [
+                    {
+                        "name": "Bobby",
+                        "id": "person:bobby",
+                        "href": "/person/bobby",
+                    }
+                ],
+            },
         )
 
 
@@ -96,6 +106,7 @@ class TestCreateNewPerson(TestCampaignSetup):
     def test_new_person(self, file_database: MagicMock, stub_dir, stub_load):
         data = {
             "name": "Salazar",
+            "type": "person",
             "markdown": "",
         }
         people_db = MagicMock()
@@ -106,21 +117,32 @@ class TestCreateNewPerson(TestCampaignSetup):
         campaign_path = MagicMock()
         campaign_path.__truediv__.return_value = people_path
         self.controller.register_campaign(campaign_path)
-        self.mock_interactor.add_person.return_value = ppl.Person(
-            "Salazar", "salazar"
+        self.mock_interactor.add_chronicle_object.return_value = (
+            chrobj.ChronicleObject("Salazar", "person:salazar", "person")
         )
-        self.mock_interactor.get_people.return_value = [
-            ppl.Person("Salazar", "salazar")
+        self.mock_interactor.get_chronicle_object_list.return_value = [
+            chrobj.ChronicleObject("Salazar", "person:salazar", "person")
         ]
         people_db.exist_file.return_value = False
-        self.controller.request_create_person(data)
+        self.controller.request_create_chronicle_object(data)
         people_db.create_file.assert_called_once_with(
-            db.MarkdownFile("salazar", "# Salazar\n")
+            db.MarkdownFile(
+                "salazar", db.MarkdownMeta(id="person:salazar"), "# Salazar\n"
+            )
         )
 
         self.mock_gui.emit_dict.assert_called_once_with(
-            "updated_people_list",
-            {"people": [{"name": "Salazar", "id": "salazar"}]},
+            "updated_chronicle_object_list",
+            {
+                "resource_type": "person",
+                "objects": [
+                    {
+                        "name": "Salazar",
+                        "id": "person:salazar",
+                        "href": "/person/salazar",
+                    }
+                ],
+            },
         )
 
     @patch("app.controller.FileHandler.load_relations")
@@ -131,6 +153,7 @@ class TestCreateNewPerson(TestCampaignSetup):
     ):
         data = {
             "name": "Salazar",
+            "type": "person",
             "markdown": "",
         }
         people_db = MagicMock()
@@ -141,9 +164,9 @@ class TestCreateNewPerson(TestCampaignSetup):
         campaign_path = MagicMock()
         campaign_path.__truediv__.return_value = people_path
         self.controller.register_campaign(campaign_path)
-        self.mock_interactor.add_person.return_value = None
+        self.mock_interactor.add_chronicle_object.return_value = None
 
-        self.controller.request_create_person(data)
+        self.controller.request_create_chronicle_object(data)
 
 
 class TestInitRelations(TestCampaignSetup):
@@ -152,13 +175,13 @@ class TestInitRelations(TestCampaignSetup):
     @patch("app.domain.relations.get_relation_type_definitions")
     def test_initial_relation_request(self, mock_get_defs: MagicMock):
 
-        self.mock_interactor.get_people.return_value = [
-            ppl.Person("Bobby", "bobby"),
-            ppl.Person("Alice", "alice"),
+        self.mock_interactor.get_chronicle_object_list.return_value = [
+            chrobj.ChronicleObject("Bobby", "person:bobby", "person"),
+            chrobj.ChronicleObject("Alice", "person:alice", "person"),
         ]
 
         self.mock_interactor.get_relations.return_value = [
-            rel.Relation("friend", "a2b", "alice", "bob")
+            rel.Relation("friend", "a2b", "person:alice", "person:bob")
         ]
 
         mock_get_defs.return_value = []
@@ -170,7 +193,7 @@ class TestInitRelations(TestCampaignSetup):
             "nodes": [
                 {
                     "data": {
-                        "id": "bobby",
+                        "id": "person:bobby",
                         "label": "Bobby",
                         "type": "person",
                         "href": "/person/bobby",
@@ -178,7 +201,7 @@ class TestInitRelations(TestCampaignSetup):
                 },
                 {
                     "data": {
-                        "id": "alice",
+                        "id": "person:alice",
                         "label": "Alice",
                         "type": "person",
                         "href": "/person/alice",
@@ -191,8 +214,8 @@ class TestInitRelations(TestCampaignSetup):
                         "id": "a2b",
                         "label": "befreundet",
                         "type": "friend",
-                        "source": "alice",
-                        "target": "bob",
+                        "source": "person:alice",
+                        "target": "person:bob",
                     }
                 }
             ],
