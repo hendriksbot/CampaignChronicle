@@ -151,7 +151,9 @@ class Controller(evh_if.EventHandlerInterface):
 
     def save_markdown(self, entity_type: str, entity_id: str, content: str):
         try:
-            file = self._file_dbs[entity_type].get_file(entity_id)
+            file = self._file_dbs[entity_type].get_file(
+                entity_id.partition(":")[2]
+            )
         except FileNotFoundError:
             return
 
